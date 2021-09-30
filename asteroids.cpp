@@ -44,6 +44,8 @@ const float gravity = -0.2f;
 const int MAX_BULLETS = 11;
 const Flt MINIMUM_ASTEROID_SIZE = 60.0;
 
+//prototypes
+extern void showCredits(int, int);
 //-----------------------------------------------------------------------------
 //Setup timers
 const double physicsRate = 1.0 / 60.0;
@@ -60,10 +62,12 @@ class Global {
 public:
 	int xres, yres;
 	char keys[65536];
+	int credits;
 	Global() {
 		xres = 640;
 		yres = 480;
 		memset(keys, 0, 65536);
+		credits = 0;
 	}
 } gl;
 
@@ -504,6 +508,9 @@ int check_keys(XEvent *e)
 	switch (key) {
 		case XK_Escape:
 			return 1;
+		case XK_c:
+			gl.credits = 1;
+			break;
 		case XK_f:
 			break;
 		case XK_s:
@@ -788,7 +795,13 @@ void render()
 	r.center = 0;
 	ggprint8b(&r, 16, 0x00ff0000, "3350 - Asteroids");
 	ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
-	ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
+	ggprint8b(&r, 30, 0x00ffff00, "n asteroids: %i", g.nasteroids);
+	ggprint8b(&r, 16, 0x00ff0000, "C - Show Credits");
+
+	if (gl.credits){
+		showCredits(gl.xres / 2, gl.yres / 2);
+	}
+
 	//-------------------------------------------------------------------------
 	//Draw the ship
 	glColor3fv(g.ship.color);
