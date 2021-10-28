@@ -798,7 +798,10 @@ void render()
 	ggprint8b(&r, 30, 0x00ffff00, "n asteroids: %i", g.nasteroids);
 	ggprint8b(&r, 16, 0x00ff0000, "C - Show Credits");
 
+	//Still Trying to add display functionality when credits show
+	int *hold;
 	if (gl.credits){
+		glTexImage2D(GL_PROXY_TEXTURE_RECTANGLE,0,GL_RGBA,100,100,0,GL_RGB,GL_UNSIGNED_BYTE, &hold);
 		showCredits(gl.xres / 2, gl.yres / 2);
 	}
 
