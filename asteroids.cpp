@@ -241,7 +241,7 @@ public:
 	void set_title() {
 		//Set the window title bar.
 		XMapWindow(dpy, win);
-		XStoreName(dpy, win, "Asteroids template");
+		XStoreName(dpy, win, "ShooterGunnerGameUltraEdition");
 	}
 	void check_resize(XEvent *e) {
 		//The ConfigureNotify is sent by the
@@ -513,6 +513,9 @@ int check_keys(XEvent *e)
 			break;
 		case XK_f:
 			break;
+        case XK_r:
+            gl.credits = 0;
+            break;
 		case XK_s:
 			break;
 		case XK_Down:
@@ -797,6 +800,7 @@ void render()
 	ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
 	ggprint8b(&r, 30, 0x00ffff00, "n asteroids: %i", g.nasteroids);
 	ggprint8b(&r, 16, 0x00ff0000, "C - Show Credits");
+    ggprint8b(&r, 16, 0x00ff0000, "R - Remove Credits");
 
 	//Still Trying to add display functionality when credits show
 	int *hold;
@@ -823,6 +827,7 @@ void render()
 	glVertex2f(  0.0f,  20.0f);
 	glVertex2f( 12.0f, -10.0f);
 	glEnd();
+
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_POINTS);
 	glVertex2f(0.0f, 0.0f);
