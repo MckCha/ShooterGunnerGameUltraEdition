@@ -1,3 +1,52 @@
-// Eduardo Ramos Soriano
-// 9/30/2021
-// Lab 6 commit
+// Name: Eduardo Ramos Soriano
+// Date edited: 11/18/2021
+// My source file for group project
+// --------------------------------------
+// Description:                         |
+// This source file includes a function |
+// that will display a tutorial menu    |
+// when the help key (h) is selected.   |
+// --------------------------------------
+#include "fonts.h"
+#include <GL/glx.h>
+#include <X11/Xlib.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+
+void displayHelp(int x,int y)
+{
+    Rect r;
+    r.bot = y;
+    r.left = x;
+    r.center = 1;
+    ggprint16(&r, 16, 0x0000ff00, "*TUTORIAL*");
+    ggprint16(&r, 16, 0x0000ff00, "-----------------------------------------");
+    ggprint16(&r, 16, 0x0000ff00, "    ");
+    ggprint16(&r, 16, 0x0000ff00, "(<- left key) - Turn to the left");
+    ggprint16(&r, 16, 0x0000ff00, "    ");
+    ggprint16(&r, 16, 0x0000ff00, "(-> right key) - Turn to the right");
+    ggprint16(&r, 16, 0x0000ff00, "    ");
+    ggprint16(&r, 16, 0x0000ff00, "(^ up key) - Move the rocket forward");
+    ggprint16(&r, 16, 0x0000ff00, "* Hold down up key to accelerate *");
+    ggprint16(&r, 16, 0x0000ff00, "    ");
+    ggprint16(&r, 16, 0x0000ff00, "(v down key) - Move the rocket in reverse");
+    ggprint16(&r, 16, 0x0000ff00, "    ");
+    ggprint16(&r, 16, 0x0000ff00, "([space] key) - Shoot bullets");
+    ggprint16(&r, 16, 0x0000ff00, "-----------------------------------------");
+    ggprint16(&r, 16, 0x0000ff00, "    ");
+    ggprint16(&r, 16, 0x0000ff00, "    ");
+    ggprint16(&r, 16, 0x0000ff00, "*OTHER KEYS*");
+    ggprint16(&r, 16, 0x0000ff00, "-----------------------------------------");
+    ggprint16(&r, 16, 0x0000ff00, "    ");
+    ggprint16(&r, 16, 0x0000ff00, "(C key) - Show credits");
+    ggprint16(&r, 16, 0x0000ff00, "    ");
+    ggprint16(&r, 16, 0x0000ff00, "(R key) - Exit from credits");
+    ggprint16(&r, 16, 0x0000ff00, "    ");
+    ggprint16(&r, 16, 0x0000ff00, "([esc] key - To close the game");
+    ggprint16(&r, 16, 0x0000ff00, "-----------------------------------------");
+    ggprint16(&r, 16, 0x0000ff00, "    ");
+    ggprint16(&r, 16, 0x000000ff, "(E key) - Exit from help menu");
+
+}
+
+
