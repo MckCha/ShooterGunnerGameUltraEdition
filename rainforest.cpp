@@ -125,7 +125,10 @@ Image img[4] = {
 "./images/forestTrans.png",
 "./images/umbrella.png" };
 
-class Global {
+#include "myglobal.h"
+extern Global g;
+
+/*class Global {
 public:
 	int done;
 	int xres, yres;
@@ -157,7 +160,7 @@ public:
 	~Global() {
 		logClose();
 	}
-} g;
+} g;*/
 
 class Bigfoot {
 public:
