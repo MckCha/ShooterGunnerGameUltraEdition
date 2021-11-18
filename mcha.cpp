@@ -10,12 +10,20 @@ void showCredits(int x,int y)
     r.bot = y;
     r.left = x;
     r.center = 1;
-
-    ggprint8b(&r, 16, 0x00ff0000, "Mike Cha");
-    ggprint8b(&r, 16, 0x00ff0000, "Eduardo Ramos Soriano");
-    ggprint8b(&r, 16, 0x00ff0000, "Keith Lappin");
-    ggprint8b(&r, 16, 0x00ff0000, "Connor Tennison");
+    ggprint16(&r, 16, 0x00ffff00, "*CREDITS*");
+    ggprint16(&r, 16, 0x00ffff00, "-------------------------");
+    ggprint16(&r, 16, 0x00ff0000, "    ");
+    ggprint16(&r, 16, 0x00ff0000, "Mike Cha");
+    ggprint16(&r, 16, 0x00ff0000, "    ");
+    ggprint16(&r, 16, 0x00ff0000, "Eduardo Ramos Soriano");
+    ggprint16(&r, 16, 0x00ff0000, "    ");
+    ggprint16(&r, 16, 0x00ff0000, "Keith Lappin");
+    ggprint16(&r, 16, 0x00ff0000, "    ");
+    ggprint16(&r, 16, 0x00ff0000, "Connor Tennison");
+    ggprint16(&r, 16, 0x00ff0000, "    ");
+    ggprint16(&r, 16, 0x00ffff00, "-------------------------");
 }
+
 // Source: https://docs.gl/es2/glTexImage2D
 // Trying to still get an image from glTexImage2d Function
 void glTexImage2D(
