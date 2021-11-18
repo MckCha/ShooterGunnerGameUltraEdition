@@ -1,3 +1,5 @@
+//Mike Cha
+
 #include "fonts.h"
 #include <GL/glx.h>
 #include <X11/Xlib.h>
