@@ -1,4 +1,5 @@
 #include "myglobal.h"
+#include "log.h"
 //This is Connor's source file.
 // this is a test
 //Worked on Android for lab 10 got button and swipe down to close functionality working.
@@ -16,7 +17,7 @@ Global::Global() {
 		showUmbrella=0;
 		deflection=0;
 	}
-	~Global() {
-		logClose();
-	}
+//Global::~Global() {
+//		logClose();
+//	}
 Global g;

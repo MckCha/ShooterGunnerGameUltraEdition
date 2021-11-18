@@ -1,3 +1,4 @@
+#include <GL/glx.h>
 #ifndef _x_MYGLOBAL
 #define _x_MYGLOBAL
 class Global {
