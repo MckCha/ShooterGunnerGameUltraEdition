@@ -46,6 +46,7 @@ const Flt MINIMUM_ASTEROID_SIZE = 60.0;
 
 //prototypes
 extern void showCredits(int, int);
+extern void displayHelp(int, int);
 //-----------------------------------------------------------------------------
 //Setup timers
 const double physicsRate = 1.0 / 60.0;
@@ -63,11 +64,13 @@ public:
 	int xres, yres;
 	char keys[65536];
 	int credits;
+    int help;
 	Global() {
 		xres = 640;
 		yres = 480;
 		memset(keys, 0, 65536);
 		credits = 0;
+        help = 0;
 	}
 } gl;
 
@@ -324,13 +327,13 @@ int main()
 	srand(time(NULL));
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
-	x11.set_mouse_position(100,100);
+	//x11.set_mouse_position(100,100);
 	int done=0;
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();
 			x11.check_resize(&e);
-			check_mouse(&e);
+			//check_mouse(&e);
 			done = check_keys(&e);
 		}
 		clock_gettime(CLOCK_REALTIME, &timeCurrent);
@@ -384,7 +387,10 @@ void normalize2d(Vec v)
 	v[1] *= len;
 }
 
-void check_mouse(XEvent *e)
+// ** mouse function is removed since rocket will be 
+// operated by keys**
+// -------------------------------------------------
+/*void check_mouse(XEvent *e)
 {
 	//Did the mouse move?
 	//Was a mouse button clicked?
@@ -479,7 +485,7 @@ void check_mouse(XEvent *e)
 		savex = 100;
 		savey = 100;
 	}
-}
+}*/
 
 int check_keys(XEvent *e)
 {
@@ -510,11 +516,20 @@ int check_keys(XEvent *e)
 			return 1;
 		case XK_c:
 			gl.credits = 1;
+            init_opengl();
 			break;
+        case XK_e:
+            gl.help = 0;
+            init_opengl();
 		case XK_f:
 			break;
+        case XK_h:
+            gl.help = 1;
+            init_opengl();
+            break;
         case XK_r:
             gl.credits = 0;
+            init_opengl();
             break;
 		case XK_s:
 			break;
@@ -728,12 +743,12 @@ void physics()
 			g.ship.angle += 360.0f;
 	}
 	if (gl.keys[XK_Up]) {
-		//apply thrust
 		//convert ship angle to radians
 		Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
 		//convert angle to a vector
 		Flt xdir = cos(rad);
 		Flt ydir = sin(rad);
+        //vel = vel + dir
 		g.ship.vel[0] += xdir*0.02f;
 		g.ship.vel[1] += ydir*0.02f;
 		Flt speed = sqrt(g.ship.vel[0]*g.ship.vel[0]+
@@ -745,6 +760,24 @@ void physics()
 			g.ship.vel[1] *= speed;
 		}
 	}
+    if (gl.keys[XK_Down]) {
+        //convert ship angle to radians
+        Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
+        //convert angle to a vector
+        Flt xdir = cos(rad);
+        Flt ydir = sin(rad);
+        //vel = vel - dir
+        g.ship.vel[0] -= xdir*0.02f;
+        g.ship.vel[1] -= ydir*0.02f;
+        Flt speed = sqrt(g.ship.vel[0]*g.ship.vel[0]+
+                g.ship.vel[1]*g.ship.vel[1]);
+        if (speed > 10.0f) {
+            speed = 10.0f;
+            normalize2d(g.ship.vel);
+            g.ship.vel[0] *= speed;
+            g.ship.vel[1] *= speed;
+        }
+    }
 	if (gl.keys[XK_space]) {
 		//a little time between each bullet
 		struct timespec bt;
@@ -796,18 +829,25 @@ void render()
 	r.bot = gl.yres - 20;
 	r.left = 10;
 	r.center = 0;
-	ggprint8b(&r, 16, 0x00ff0000, "3350 - Asteroids");
+	ggprint8b(&r, 16, 0x00ff0000, "ShooterGunnerGameUltraEdition");
 	ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
 	ggprint8b(&r, 30, 0x00ffff00, "n asteroids: %i", g.nasteroids);
+    ggprint8b(&r, 16, 0x00ff0000, "H - Help (Tutorial)");
 	ggprint8b(&r, 16, 0x00ff0000, "C - Show Credits");
-    ggprint8b(&r, 16, 0x00ff0000, "R - Remove Credits");
 
 	//Still Trying to add display functionality when credits show
-	int *hold;
+	/*int *hold;
 	if (gl.credits){
-		glTexImage2D(GL_PROXY_TEXTURE_RECTANGLE,0,GL_RGBA,100,100,0,GL_RGB,GL_UNSIGNED_BYTE, &hold);
-		showCredits(gl.xres / 2, gl.yres / 2);
-	}
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearDepth(1.0);
+        glClearColor(0.0,0.0,0.0,0.0);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glTexImage2D(GL_PROXY_TEXTURE_RECTANGLE,0,GL_RGBA,100,100,0,
+                GL_RGB,GL_UNSIGNED_BYTE, &hold);
+        showCredits(gl.xres / 2, gl.yres / 2);
+        ggprint16(&r, 16, 0x00ffff00, "Requirements");
+	}*/
 
 	//-------------------------------------------------------------------------
 	//Draw the ship
@@ -901,6 +941,34 @@ void render()
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
 		glEnd();
 	}
+
+    //-------------------------------------------------------------------------
+    //Clearing the screen to display credits
+    int *hold;
+    if (gl.credits){
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearDepth(1.0);
+        glClearColor(0.0,0.0,0.0,0.0);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glTexImage2D(GL_PROXY_TEXTURE_RECTANGLE,0,GL_RGBA,100,100,0,
+                GL_RGB,GL_UNSIGNED_BYTE, &hold);
+        showCredits(gl.xres / 2, gl.yres / 1.1);
+        ggprint8b(&r, 16, 0x00ff0000, "R - Exit from credits");
+    }
+    //-------------------------------------------------------------------------
+    //Clearing the screen to display tutorial
+    if (gl.help){
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearDepth(1.0);
+        glClearColor(0.0,0.0,0.0,0.0);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glTexImage2D(GL_PROXY_TEXTURE_RECTANGLE,0,GL_RGBA,100,100,0,
+                GL_RGB,GL_UNSIGNED_BYTE, &hold);
+        displayHelp(gl.xres / 2, gl.yres / 1.1);
+    }
+
 }
 
 
