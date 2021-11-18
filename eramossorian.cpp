@@ -49,4 +49,11 @@ void displayHelp(int x,int y)
 
 }
 
-
+void gameOver(int x, int y){
+    Rect r;
+    r.bot = y;
+    r.left = x;
+    r.center = 1;
+    ggprint16(&r, 16, 0x000000ff, "GAME OVER!");
+    ggprint16(&r, 16, 0x000000ff, "Thank you for playing.");
+}
