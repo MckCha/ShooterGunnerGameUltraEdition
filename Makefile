@@ -1,13 +1,13 @@
 CFLAGS = -I ./include
-##LIB    = ./libggfonts.so
-LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm #-lXrandr
+##LIB    = ./lib/fmod/libfmodex64.so
+LFLAGS = -lrt -lX11 -lGLU -lGL -lm #-lXrandr
 
-all: asteroids
+all: rainforest
 
-asteroids: asteroids.cpp log.cpp timers.cpp mcha.cpp eramossorian.cpp
-	g++ $(CFLAGS) asteroids.cpp log.cpp timers.cpp mcha.cpp eramossorian.cpp libggfonts.a -Wall -Wextra $(LFLAGS) -oasteroids
+rainforest: rainforest.cpp log.cpp
+	g++ $(CFLAGS) rainforest.cpp log.cpp libggfonts.a -Wall -Wextra $(LFLAGS) -o rainforest
 
 clean:
-	rm -f asteroids
+	rm -f rainforest
 	rm -f *.o
 
