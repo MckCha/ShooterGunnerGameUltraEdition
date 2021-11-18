@@ -4,8 +4,8 @@ LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm #-lXrandr
 
 all: asteroids
 
-asteroids: asteroids.cpp log.cpp timers.cpp mcha.cpp
-	g++ $(CFLAGS) asteroids.cpp log.cpp timers.cpp mcha.cpp libggfonts.a -Wall -Wextra $(LFLAGS) -oasteroids
+asteroids: asteroids.cpp log.cpp timers.cpp mcha.cpp eramossorian.cpp
+	g++ $(CFLAGS) asteroids.cpp log.cpp timers.cpp mcha.cpp eramossorian.cpp libggfonts.a -Wall -Wextra $(LFLAGS) -oasteroids
 
 clean:
 	rm -f asteroids
