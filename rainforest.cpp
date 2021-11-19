@@ -9,6 +9,7 @@
 //Press B to see bigfoot roaming his forest.
 //
 //
+#include "mcha.cpp"
 #include "ctennison.cpp"
 #include <stdio.h>
 #include <stdlib.h>
@@ -120,14 +121,16 @@ public:
 			unlink(ppmname);
 	}
 };
+
+
+#include "myglobal.h"
+extern Global g;
+extern Bigfoot bigfoot;
 Image img[4] = {
 "./images/bigfoot.png",
 "./images/forest.png",
 "./images/forestTrans.png",
 "./images/umbrella.png" };
-
-#include "myglobal.h"
-extern Global g;
 
 /*class Global {
 public:
@@ -163,11 +166,14 @@ public:
 	}
 } g;*/
 
+
+/*
 class Bigfoot {
 public:
 	Vec pos;
 	Vec vel;
 } bigfoot;
+*/
 
 class Raindrop {
 public:

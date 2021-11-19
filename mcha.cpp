@@ -1,11 +1,10 @@
 //Mike Cha
 
 #include "fonts.h"
-#include <GL/glx.h>
-#include <X11/Xlib.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-
+#include "myglobal.h"
+#include <string.h>
+#include "log.h"
+#include <vector>
 void showCredits(int x,int y)
 {
     Rect r;
@@ -26,16 +25,6 @@ void showCredits(int x,int y)
     ggprint16(&r, 16, 0x00ffff00, "-------------------------");
 }
 
-// Source: https://docs.gl/es2/glTexImage2D
-// Trying to still get an image from glTexImage2d Function
-void glTexImage2D(
-         GLenum  target,
-         GLint   level,
-         GLint   internalformat,
-         GLsizei width,
-         GLsizei height,
-         GLint   border,
-         GLint   format,
-         GLenum  type,
-         const GLvoid  *data
-);
+//Declares bigfoot Object.
+Bigfoot::Bigfoot() {};
+Bigfoot bigfoot;
