@@ -11,6 +11,7 @@
 //
 #include "mcha.cpp"
 #include "ctennison.cpp"
+#include "eramossorian.cpp"
 #include "klappin.cpp"
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,12 +29,11 @@
 //#include "ppm.h"
 #include "fonts.h"
 
-/*
-All moved to myGlobal
 //defined types
 typedef double Flt;
 typedef double Vec[3];
 typedef Flt	Matrix[4][4];
+
 
 //macros
 #define rnd() (((double)rand())/(double)RAND_MAX)
@@ -48,7 +48,6 @@ typedef Flt	Matrix[4][4];
 //constants
 const float timeslice = 1.0f;
 const float gravity = -0.2f;
-*/
 #define ALPHA 1
 
 //-----------------------------------------------------------------------------
@@ -71,7 +70,7 @@ void timeCopy(struct timespec *dest, struct timespec *source) {
 //-----------------------------------------------------------------------------
 
 
-
+/*
 class Image {
 public:
 	int width, height;
@@ -125,62 +124,31 @@ public:
 			unlink(ppmname);
 	}
 };
-
+*/
 
 #include "myglobal.h"
 extern Global g;
 extern Bigfoot bigfoot;
-Image img[4] = {
+// Prototypes
+//extern void showCredits(int, int);
+
+//extern Image img[5];
+
+//extern Image img;
+
+/*
+Image img[5] = {
 "./images/bigfoot.png",
 "./images/forest.png",
 "./images/forestTrans.png",
 "./images/umbrella.png" };
-
-/*class Global {
-public:
-	int done;
-	int xres, yres;
-	GLuint bigfootTexture;
-	GLuint silhouetteTexture;
-	GLuint forestTexture;
-	GLuint forestTransTexture;
-	GLuint umbrellaTexture;
-	int showBigfoot;
-	int forest;
-	int silhouette;
-	int trees;
-	int showRain;
-	int showUmbrella;
-	int deflection;
-	Global() {
-		logOpen();
-		done=0;
-		xres=800;
-		yres=600;
-		showBigfoot=0;
-		forest=1;
-		silhouette=1;
-		trees=1;
-		showRain=0;
-		showUmbrella=0;
-		deflection=0;
-	}
-	~Global() {
-		logClose();
-	}
-} g;*/
-
-
-/*
-class Bigfoot {
-public:
-	Vec pos;
-	Vec vel;
-} bigfoot;
 */
-int ndrops=1;
-int totrain=0;
-int maxrain=0;
+
+//extern void createImgs();
+
+extern Image img[];
+
+
 
 class Raindrop {
 public:
@@ -196,14 +164,10 @@ public:
 	float color[4];
 	Raindrop *prev;
 	Raindrop *next;
-} *rainhead = NULL; 
-
-extern Laser *laserhead; 
-Laser *laserhead = NULL;
-
-//extern int totlass = 0;
-int nlaser=1;
-int maxlas=0;
+} *rainhead = NULL;
+int ndrops=1;
+int totrain=0;
+int maxrain=0;
 void deleteRain(Raindrop *node);
 void cleanupRaindrops(void);
 //
@@ -563,6 +527,12 @@ int checkKeys(XEvent *e)
 		return 0;
 	}
 	switch (key) {
+		/*	Still Trying to figure out ShowingCredits.
+		case XK_c:
+			g.credits = 1;
+			initOpengl();
+			break;
+		*/
 		case XK_b:
 			g.showBigfoot ^= 1;
 			if (g.showBigfoot) {
@@ -928,6 +898,20 @@ void render()
 	//draw a quad with texture
 	float wid = 120.0f;
 	glColor3f(1.0, 1.0, 1.0);
+	/* Trying to fix showingCredits
+	int *hold;
+	if (g.credits) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearDepth(1.0);
+        glClearColor(0.0,0.0,0.0,0.0);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glTexImage2D(GL_PROXY_TEXTURE_RECTANGLE,0,GL_RGBA,100,100,0,
+                GL_RGB,GL_UNSIGNED_BYTE, &hold);
+        showCredits(g.xres / 2, g.yres / 2);
+        ggprint16(&r, 16, 0x00ffff00, "Requirements");
+	}
+	*/
 	if (g.forest) {
 		glBindTexture(GL_TEXTURE_2D, g.forestTexture);
 		glBegin(GL_QUADS);
@@ -1007,6 +991,6 @@ void render()
 	ggprint8b(&r, 16, c, "U - Umbrella");
 	ggprint8b(&r, 16, c, "R - Rain");
 	ggprint8b(&r, 16, c, "D - Deflection");
-	ggprint8b(&r, 16, c, "N - Sounds");
+	ggprint8b(&r, 16, c, "C - Credits");
 }
 

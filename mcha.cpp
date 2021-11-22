@@ -29,16 +29,10 @@ void showCredits(int x,int y)
 Bigfoot::Bigfoot() {};
 Bigfoot bigfoot;
 
-/* // Trying to bring over create Images file
-   // To my source file
-   // Problem: Not able to reference Image Class
-void createImgs()
-{
-    Image img[5] = {
-    "./images/yep.png",
-    "./images/bigfoot.png",
-    "./images/forest.png",
-    "./images/forestTrans.png",
-    "./images/umbrella.png" };
-}
-*/
+Image img[4] = {
+//"./images/bigfoot.png",
+"./images/yep.png",
+"./images/space.png",
+"./images/forestTrans.png",
+"./images/umbrella.png"};
+//"./images/yep.png" };
