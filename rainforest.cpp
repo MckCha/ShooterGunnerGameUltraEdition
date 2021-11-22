@@ -11,6 +11,7 @@
 //
 #include "mcha.cpp"
 #include "ctennison.cpp"
+#include "klappin.cpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,6 +28,8 @@
 //#include "ppm.h"
 #include "fonts.h"
 
+/*
+All moved to myGlobal
 //defined types
 typedef double Flt;
 typedef double Vec[3];
@@ -45,6 +48,7 @@ typedef Flt	Matrix[4][4];
 //constants
 const float timeslice = 1.0f;
 const float gravity = -0.2f;
+*/
 #define ALPHA 1
 
 //-----------------------------------------------------------------------------
@@ -174,6 +178,9 @@ public:
 	Vec vel;
 } bigfoot;
 */
+int ndrops=1;
+int totrain=0;
+int maxrain=0;
 
 class Raindrop {
 public:
@@ -189,10 +196,14 @@ public:
 	float color[4];
 	Raindrop *prev;
 	Raindrop *next;
-} *rainhead = NULL;
-int ndrops=1;
-int totrain=0;
-int maxrain=0;
+} *rainhead = NULL; 
+
+extern Laser *laserhead; 
+Laser *laserhead = NULL;
+
+//extern int totlass = 0;
+int nlaser=1;
+int maxlas=0;
 void deleteRain(Raindrop *node);
 void cleanupRaindrops(void);
 //
