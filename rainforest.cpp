@@ -12,7 +12,7 @@
 #include "mcha.cpp"
 #include "ctennison.cpp"
 #include "eramossorian.cpp"
-//#include "klappin.cpp"
+#include "klappin.cpp"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -29,6 +29,7 @@
 //#include "ppm.h"
 #include "fonts.h"
 
+/*
 //defined types
 typedef double Flt;
 typedef double Vec[3];
@@ -49,7 +50,7 @@ typedef Flt	Matrix[4][4];
 const float timeslice = 1.0f;
 const float gravity = -0.2f;
 #define ALPHA 1
-
+*/
 //-----------------------------------------------------------------------------
 //Setup timers
 //clock_gettime(CLOCK_REALTIME, &timePause);
