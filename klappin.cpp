@@ -7,11 +7,24 @@
 #include "myglobal.h"
 //extern Global g;
 
+//variable declarations
 int enemycount;
 int enemylascount;
 int playerlascount;
 bool playerexists;
+bool gameover;
 
+//General Prototypes
+void checkCollisions();
+void spanwer();
+
+//class forward declarations
+class Laser;
+class Enemy;
+class Player;
+
+//functions are grouped with classes by association, most are not
+//part of the actual class that they are grouped with.
 /*---------LASERS---------*/
 class Laser {
     public:
@@ -28,17 +41,18 @@ class Laser {
         float color[4];
         Laser *prev;
         Laser *next;
-        void cleanupLasers();
-        void deleteLaser(Laser*);
-        void createEnemyLaser(const int, const int);
-        void createPlayerLaser(const int, const int);
-        void checkLasers();
-        void drawLasers();
-    private:
-        void createLaser(const int, const int);
         
 
 };
+
+//Laser Prototypes
+void cleanupLasers();
+void deleteLaser(Laser*);
+void createEnemyLaser(const int, const int);
+void createPlayerLaser(const int, const int);
+void checkLasers();
+void drawLasers();
+
 
 Laser *headlaser;
 
@@ -217,12 +231,19 @@ class Enemy {
         double direction;
         double vel;
         double color[3];
+        double radius;
         Enemy *prev;
         Enemy *next;
         
 };
 
 Enemy *headenemy;
+
+//Enemy declarations
+void createEnemy();
+void deleteEnemy(Enemy*);
+void cleanupEnemies();
+void checkEnemies();
 
 void createEnemy()
 {
@@ -242,6 +263,7 @@ void createEnemy()
         node->color[0] = 1.0;
         node->color[1] = 1.0;
         node->color[2] = 1.0;
+        node->radius = 20;
         node->next = headenemy;
         if (headenemy != NULL)
             headenemy->prev = node;
@@ -282,15 +304,11 @@ void cleanupEnemies()
     }
     headenemy=NULL;
 }
-/*
-void checkCollisions()
-{
 
-}
 
 void checkEnemies()
 {
-    checkCollissions();
+    checkCollisions();
   
     Enemy *node = headenemy;
 
@@ -298,17 +316,121 @@ void checkEnemies()
     //enemies will move like space invaders. Move to the right, drop down,
     //increase speed and reverse.
     while (node) {
-        if (
-        
+        //if at one of the edges, drop down, speed up, reverse direction
+        if (node->pos[0] > (g.xres-20) || node->pos[0] < 20)
+        {
+            node->direction = -node->direction;
+            node->pos[1] -= 20;
+            node->vel = node->vel * 1.20;
+        }
+        //Dont think we'll hit any significant floating point precision
+        //problems. Keep an eye out for them.
+        node->pos[0] += (20 *(node->direction) * (node->vel));
+    }    
+    
+    node = headenemy;
+    
+    //check if enemies reach player ship
+    while (node) {
+        if (node->pos[1] <= 50)
+        {
+            deleteEnemy(node);
+            gameover = True;
+            break;
+        }
+    node = node->next;
+    }
+
+    //add chance of enemies firing a laser
+
 
 }
     
-*/
 /*---------END ENEMIES--------*/
 
 
 
 /*---------PLAYER SHIP--------*/
 
+//Ship has no health pool, one shot and you're done.
+//Toggle the game over variable
+class Player {
+    public:
+        Vec pos;
+        double color[3];
+        double radius;
+        Player() {
+            pos[0] = (Flt)(g.xres/2);
+            pos[1] = (Flt)(g.yres/8);
+            radius = 10.0;
+            color[0] = 0.1;
+            color[1] = 0.1;
+            color[2] = 1.0;
+        }
+} PShip;
+//Dont tie functions to this class, its just for  display and determining
+//collisions and player laser spawn locations. Very simple
+
 
 /*---------END PLAYER SHIP----*/
+
+/*--BEGIN GENERAL FUNCTIONS---*/
+void checkCollisions()
+{
+    Flt xd,yd,distance;
+    //go through lasers, check if within area of an enemy if type==0
+    Laser *lasers = headlaser;
+    Laser *savedLaser;
+    Enemy *savedEnemy;
+
+    while (lasers)
+    {
+        Enemy *enemies = headenemy;
+        //if players laser
+        if (lasers->type == 1) 
+        {
+            while (enemies)
+            {   //using method from Asteroids framework. Its pretty clever
+                xd = lasers->pos[0] - enemies->pos[0];
+                yd = lasers->pos[1] - enemies->pos[1];
+                distance = (xd*xd + yd*yd);
+                savedLaser = lasers->next;
+                savedEnemy = enemies->next;
+                //if possible, add a hit effect/explosion later
+                if (distance < (enemies->radius*enemies->radius))
+                {
+                    --playerlascount;
+                    --enemycount;
+                    deleteLaser(lasers);
+                    deleteEnemy(enemies);
+                    SCORE += 100;
+                }
+                lasers = savedLaser;
+                enemies = savedEnemy;
+
+             }
+        }
+        //if enemy laser
+        if (lasers->type == 0)
+        {
+            xd = lasers->pos[0] - PShip.pos[0];
+            yd = lasers->pos[1] - PShip.pos[1];
+            distance = (xd*xd + yd*yd);
+            if (distance < (PShip.radius*PShip.radius))
+            {
+                //player is hit, end game.
+                gameover = True;
+                break;
+            }
+            lasers = lasers->next;
+        }
+
+
+    }
+}
+
+
+void spawner()
+{
+   //run random for a chance at spawning an enemy
+}
