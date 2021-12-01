@@ -16,6 +16,8 @@ Global::Global() {
 		showRain=0;
 		showUmbrella=0;
 		deflection=0;
+		credits=0;
+		help=0;
 	}
 //Global::~Global() {
 //		logClose();
