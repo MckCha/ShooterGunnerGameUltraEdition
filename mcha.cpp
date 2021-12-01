@@ -11,8 +11,8 @@ void showCredits(int x,int y)
     r.bot = y;
     r.left = x;
     r.center = 1;
-    ggprint16(&r, 16, 0x00ffff00, "*CREDITS*");
-    ggprint16(&r, 16, 0x00ffff00, "-------------------------");
+    ggprint16(&r, 16, 0x00ff0000, "*CREDITS*");
+    ggprint16(&r, 16, 0x00ff0000, "-------------------------");
     ggprint16(&r, 16, 0x00ff0000, "    ");
     ggprint16(&r, 16, 0x00ff0000, "Mike Cha");
     ggprint16(&r, 16, 0x00ff0000, "    ");
@@ -22,7 +22,7 @@ void showCredits(int x,int y)
     ggprint16(&r, 16, 0x00ff0000, "    ");
     ggprint16(&r, 16, 0x00ff0000, "Connor Tennison");
     ggprint16(&r, 16, 0x00ff0000, "    ");
-    ggprint16(&r, 16, 0x00ffff00, "-------------------------");
+    ggprint16(&r, 16, 0x00ff0000, "-------------------------");
 }
 
 //Declares bigfoot Object.
