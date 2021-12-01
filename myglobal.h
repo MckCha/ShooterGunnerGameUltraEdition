@@ -39,20 +39,17 @@ int SCORE;
 class Global {
 public:
 	int done;
+	int help;
 	int xres, yres;
 	GLuint bigfootTexture;
 	GLuint silhouetteTexture;
 	GLuint forestTexture;
 	GLuint forestTransTexture;
 	GLuint umbrellaTexture;
-	GLuint startMenu;
-	GLuint settingPage;
 	int credits;
 	int showBigfoot;
 	int forest;
 	int silhouette;
-	int menu;
-	int settings;
 	int trees;
 	int showRain;
 	int showUmbrella;

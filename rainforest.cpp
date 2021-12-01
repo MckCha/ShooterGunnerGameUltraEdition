@@ -21,8 +21,8 @@
 #include <math.h>
 #include <X11/Xlib.h>
 //#include <X11/Xutil.h>
-//#include <GL/gl.h>
-//#include <GL/glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "log.h"
@@ -130,10 +130,9 @@ public:
 #include "myglobal.h"
 extern Global g;
 extern Bigfoot bigfoot;
-extern void createMenu();
-extern void createSettings();
 // Prototypes
-//extern void showCredits(int, int);
+extern void showCredits(int, int);
+extern void displayHelp(int, int);
 
 //extern Image img[5];
 
@@ -150,7 +149,6 @@ Image img[5] = {
 //extern void createImgs();
 
 extern Image img[];
-
 
 
 
@@ -395,9 +393,7 @@ void initOpengl(void)
 	//create opengl texture elements
 	glGenTextures(1, &g.bigfootTexture);
 	glGenTextures(1, &g.silhouetteTexture);
-	glGenTextures(1, &g.forestTexture); 
-	glGenTextures(1, &g.startMenu);
-	glGenTextures(1, &g.settingPage);
+	glGenTextures(1, &g.forestTexture);
 	glGenTextures(1, &g.umbrellaTexture);
 	//-------------------------------------------------------------------------
 	//bigfoot
@@ -455,11 +451,6 @@ void initOpengl(void)
 									0, GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
 	//-------------------------------------------------------------------------
 	//
-	//-------------------------------------------------------------------------
-	//StartMenu and Settings Page
-	createMenu();
-	createSettings();
-	//-------------------------------------------------------------------------
 	//forest transparent part
 	//
 	glBindTexture(GL_TEXTURE_2D, g.forestTransTexture);
@@ -470,7 +461,7 @@ void initOpengl(void)
 	//must build a new set of data...
 	w = img[2].width;
 	h = img[2].height;
-	unsigned char *ftData = buildAlphaData(&img[2]);	// CHANGE TO 2 AGAIN
+	unsigned char *ftData = buildAlphaData(&img[2]);	
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 											GL_RGBA, GL_UNSIGNED_BYTE, ftData);
 	free(ftData);
@@ -538,32 +529,39 @@ int checkKeys(XEvent *e)
 		return 0;
 	}
 	switch (key) {
-		/*	Still Trying to figure out ShowingCredits.
+		//	Still Trying to figure out ShowingCredits.
 		case XK_c:
 			g.credits = 1;
 			initOpengl();
 			break;
-		*/
+		case XK_q:
+            g.credits = 0;
+            initOpengl();
+            break;
 		case XK_b:
 			g.showBigfoot ^= 1;
 			if (g.showBigfoot) {
 				bigfoot.pos[0] = -250.0;
 			}
 			break;
-		case XK_s:
-			g.settings ^= 1;
-			break;
 		case XK_d:
 			g.deflection ^= 1;
 			break;
+		case XK_e:
+            g.help = 0;
+            initOpengl();
+			break;
+		case XK_h:
+            g.help = 1;
+            initOpengl();
+            break;
 		case XK_f:
 			g.forest ^= 1;
 			break;
-/*		case XK_s:					DELETE LATER
+		case XK_s:
 			g.silhouette ^= 1;
 			printf("silhouette: %i\n", g.silhouette);
 			break;
-*/
 		case XK_t:
 			g.trees ^= 1;
 			break;
@@ -928,7 +926,7 @@ void render()
 	}
 	*/
 	if (g.forest) {
-		glBindTexture(GL_TEXTURE_2D, g.startMenu);
+		glBindTexture(GL_TEXTURE_2D, g.forestTexture);
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
 			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
@@ -936,16 +934,6 @@ void render()
 			glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
 		glEnd();
 	}
-	if (g.settings) {
-		glBindTexture(GL_TEXTURE_2D, g.settingPage);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
-			glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
-			glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
-		glEnd();
-	}
-
 	if (g.showBigfoot) {
 		glPushMatrix();
 		glTranslatef(bigfoot.pos[0], bigfoot.pos[1], bigfoot.pos[2]);
@@ -1009,12 +997,36 @@ void render()
 	r.bot = g.yres - 20;
 	r.left = 10;
 	r.center = 0;
-	if (g.settings) {
+	ggprint8b(&r, 16, c, "B - Bigfoot");
+	ggprint8b(&r, 16, c, "F - Forest");
+	ggprint8b(&r, 16, c, "S - Silhouette");
+	ggprint8b(&r, 16, c, "T - Trees");
+	ggprint8b(&r, 16, c, "U - Umbrella");
+	ggprint8b(&r, 16, c, "R - Rain");
+	ggprint8b(&r, 16, c, "D - Deflection");
+	ggprint8b(&r, 16, c, "H - Help Menu");
 
-	} else {
-	ggprint8b(&r, 16, c, "P - Play");
-	ggprint8b(&r, 16, c, "C - Credits");
-	ggprint8b(&r, 16, c, "S - Settings");
-	}
+	int *hold;
+    if (g.credits){
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearDepth(1.0);
+        glClearColor(0.0,0.0,1.0,0.0);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glTexImage2D(GL_PROXY_TEXTURE_RECTANGLE,0,GL_RGBA,100,100,0,
+                GL_RGB,GL_UNSIGNED_BYTE, &hold);
+        showCredits(g.xres / 2, g.yres / 1.1);
+        ggprint8b(&r, 16, 0x00ff0000, "Q - Exit from credits");
+    }
+	if (g.help){
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearDepth(1.0);
+        glClearColor(0.0,0.0,1.0,0.0);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glTexImage2D(GL_PROXY_TEXTURE_RECTANGLE,0,GL_RGBA,100,100,0,
+                GL_RGB,GL_UNSIGNED_BYTE, &hold);
+        displayHelp(g.xres / 2, g.yres / 1.1);
+    }
 }
 
