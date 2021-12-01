@@ -130,6 +130,8 @@ public:
 #include "myglobal.h"
 extern Global g;
 extern Bigfoot bigfoot;
+extern void createMenu();
+extern void createSettings();
 // Prototypes
 //extern void showCredits(int, int);
 
@@ -148,6 +150,7 @@ Image img[5] = {
 //extern void createImgs();
 
 extern Image img[];
+
 
 
 
@@ -392,7 +395,9 @@ void initOpengl(void)
 	//create opengl texture elements
 	glGenTextures(1, &g.bigfootTexture);
 	glGenTextures(1, &g.silhouetteTexture);
-	glGenTextures(1, &g.forestTexture);
+	glGenTextures(1, &g.forestTexture); 
+	glGenTextures(1, &g.startMenu);
+	glGenTextures(1, &g.settingPage);
 	glGenTextures(1, &g.umbrellaTexture);
 	//-------------------------------------------------------------------------
 	//bigfoot
@@ -450,6 +455,11 @@ void initOpengl(void)
 									0, GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
 	//-------------------------------------------------------------------------
 	//
+	//-------------------------------------------------------------------------
+	//StartMenu and Settings Page
+	createMenu();
+	createSettings();
+	//-------------------------------------------------------------------------
 	//forest transparent part
 	//
 	glBindTexture(GL_TEXTURE_2D, g.forestTransTexture);
@@ -460,7 +470,7 @@ void initOpengl(void)
 	//must build a new set of data...
 	w = img[2].width;
 	h = img[2].height;
-	unsigned char *ftData = buildAlphaData(&img[2]);	
+	unsigned char *ftData = buildAlphaData(&img[2]);	// CHANGE TO 2 AGAIN
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 											GL_RGBA, GL_UNSIGNED_BYTE, ftData);
 	free(ftData);
@@ -540,16 +550,20 @@ int checkKeys(XEvent *e)
 				bigfoot.pos[0] = -250.0;
 			}
 			break;
+		case XK_s:
+			g.settings ^= 1;
+			break;
 		case XK_d:
 			g.deflection ^= 1;
 			break;
 		case XK_f:
 			g.forest ^= 1;
 			break;
-		case XK_s:
+/*		case XK_s:					DELETE LATER
 			g.silhouette ^= 1;
 			printf("silhouette: %i\n", g.silhouette);
 			break;
+*/
 		case XK_t:
 			g.trees ^= 1;
 			break;
@@ -914,7 +928,7 @@ void render()
 	}
 	*/
 	if (g.forest) {
-		glBindTexture(GL_TEXTURE_2D, g.forestTexture);
+		glBindTexture(GL_TEXTURE_2D, g.startMenu);
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
 			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
@@ -922,6 +936,16 @@ void render()
 			glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
 		glEnd();
 	}
+	if (g.settings) {
+		glBindTexture(GL_TEXTURE_2D, g.settingPage);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
+		glEnd();
+	}
+
 	if (g.showBigfoot) {
 		glPushMatrix();
 		glTranslatef(bigfoot.pos[0], bigfoot.pos[1], bigfoot.pos[2]);
@@ -985,13 +1009,12 @@ void render()
 	r.bot = g.yres - 20;
 	r.left = 10;
 	r.center = 0;
-	ggprint8b(&r, 16, c, "B - Bigfoot");
-	ggprint8b(&r, 16, c, "F - Forest");
-	ggprint8b(&r, 16, c, "S - Silhouette");
-	ggprint8b(&r, 16, c, "T - Trees");
-	ggprint8b(&r, 16, c, "U - Umbrella");
-	ggprint8b(&r, 16, c, "R - Rain");
-	ggprint8b(&r, 16, c, "D - Deflection");
+	if (g.settings) {
+
+	} else {
+	ggprint8b(&r, 16, c, "P - Play");
 	ggprint8b(&r, 16, c, "C - Credits");
+	ggprint8b(&r, 16, c, "S - Settings");
+	}
 }
 
