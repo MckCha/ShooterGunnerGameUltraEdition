@@ -39,6 +39,7 @@ int SCORE;
 class Global {
 public:
 	int done;
+	int help;
 	int xres, yres;
 	GLuint bigfootTexture;
 	GLuint silhouetteTexture;
