@@ -21,8 +21,8 @@
 #include <math.h>
 #include <X11/Xlib.h>
 //#include <X11/Xutil.h>
-//#include <GL/gl.h>
-//#include <GL/glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "log.h"
@@ -133,7 +133,8 @@ extern Bigfoot bigfoot;
 extern void createMenu();
 extern void createSettings();
 // Prototypes
-//extern void showCredits(int, int);
+extern void showCredits(int, int);
+extern void displayHelp(int, int);
 
 //extern Image img[5];
 
@@ -538,18 +539,29 @@ int checkKeys(XEvent *e)
 		return 0;
 	}
 	switch (key) {
-		/*	Still Trying to figure out ShowingCredits.
+		//Still Trying to figure out ShowingCredits.
 		case XK_c:
 			g.credits = 1;
 			initOpengl();
 			break;
-		*/
+		case XK_q:
+            		g.credits = 0;
+            		initOpengl();
+            		break;
 		case XK_b:
 			g.showBigfoot ^= 1;
 			if (g.showBigfoot) {
 				bigfoot.pos[0] = -250.0;
 			}
 			break;
+		case XK_e:
+            		g.help = 0;
+           	 	initOpengl();
+			break;
+		case XK_h:
+           	 	g.help = 1;
+            		initOpengl();
+            		break;
 		case XK_s:
 			g.settings ^= 1;
 			break;
@@ -1015,6 +1027,31 @@ void render()
 	ggprint8b(&r, 16, c, "P - Play");
 	ggprint8b(&r, 16, c, "C - Credits");
 	ggprint8b(&r, 16, c, "S - Settings");
+	ggprint8b(&r, 16, c, "H - Help Menu");
+		
+	
 	}
+	int *hold;
+    	if (g.credits){
+        	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        	glClearDepth(1.0);
+        	glClearColor(0.0,0.0,1.0,0.0);
+        	glMatrixMode(GL_PROJECTION);
+        	glLoadIdentity();
+        	glTexImage2D(GL_PROXY_TEXTURE_RECTANGLE,0,GL_RGBA,100,100,0,
+                	GL_RGB,GL_UNSIGNED_BYTE, &hold);
+        	showCredits(g.xres / 2, g.yres / 1.1);
+        	ggprint8b(&r, 16, 0x00ff0000, "Q - Exit from credits");
+    	}
+	if (g.help){
+        	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        	glClearDepth(1.0);
+        	glClearColor(0.0,0.0,1.0,0.0);
+        	glMatrixMode(GL_PROJECTION);
+        	glLoadIdentity();
+        	glTexImage2D(GL_PROXY_TEXTURE_RECTANGLE,0,GL_RGBA,100,100,0,
+                	GL_RGB,GL_UNSIGNED_BYTE, &hold);
+        	displayHelp(g.xres / 2, g.yres / 1.1);
+    	}
 }
 
