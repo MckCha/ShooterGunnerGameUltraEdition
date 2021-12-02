@@ -860,6 +860,7 @@ void checkRaindrops()
 
 void physics()
 {
+    //replace with all physics checks
 	if (g.showBigfoot)
 		moveBigfoot();
 	if (g.showRain)
