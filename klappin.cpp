@@ -8,15 +8,16 @@
 //extern Global g;
 
 //variable declarations
-int enemycount;
-int enemylascount;
-int playerlascount;
-bool playerexists;
-bool gameover;
+extern int enemycount;
+extern int enemylascount;
+extern int playerlascount;
+extern bool playerexists;
+extern bool gameover;
 
 //General Prototypes
 void checkCollisions();
 void spawner();
+void beginEnemies();
 
 //class forward declarations
 //moved class definitions to myglobal, left here for documentation
@@ -188,7 +189,7 @@ void checkLasers()
     node = headlaser;
    
    //now check if any are out of bounds.
-   //also check if contact with ship once that logic is in
+   
     while (node) {
         n++;
         if (node->pos[1] < -20.0f || node->pos[1] > g.yres) 
@@ -329,6 +330,7 @@ void checkEnemies()
         //Dont think we'll hit any significant floating point precision
         //problems. Keep an eye out for them.
         node->pos[0] += (20 *(node->direction) * (node->vel));
+
     }    
     
     node = headenemy;
@@ -341,10 +343,20 @@ void checkEnemies()
             gameover = True;
             break;
         }
+        //if they haven't, give them a chance of firing a laser
+
+        else
+        {
+            if (random(100) < 5)
+            {
+                createEnemyLaser(node->pos[0],node->pos[1]);
+
+            }
+        }
     node = node->next;
     }
 
-    //add chance of enemies firing a laser
+    
 
 
 
@@ -444,8 +456,31 @@ void checkCollisions()
     }
 }
 
-
+//random chance every cycle to spawn a new enemy
 void spawner()
 {
-   //run random for a chance at spawning an enemy
+   if (random(100) < 8) 
+   {
+       createEnemy();
+   }
 }
+
+//spawn a few enemies at the beginning
+void beginEnemies()
+{
+    //filler values so enemies don't all spawn at exactly the same time.
+    //More efficient ways to do this but it's the simplest.
+    for (int i = 0; i <= 1000; i++)
+    {
+        //spawn 5 enemies
+        if (i % 200 == 0)
+        {
+            createEnemy();
+        }
+    }
+}
+
+
+
+
+
