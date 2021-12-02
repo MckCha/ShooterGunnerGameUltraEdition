@@ -16,7 +16,7 @@ bool gameover;
 
 //General Prototypes
 void checkCollisions();
-void spanwer();
+void spawner();
 
 //class forward declarations
 class Laser;
@@ -344,6 +344,7 @@ void checkEnemies()
     //add chance of enemies firing a laser
 
 
+
 }
     
 /*---------END ENEMIES--------*/
@@ -407,6 +408,7 @@ void checkCollisions()
                 }
                 lasers = savedLaser;
                 enemies = savedEnemy;
+                continue;
 
              }
         }
