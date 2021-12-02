@@ -620,9 +620,9 @@ int checkKeys(XEvent *e)
 		case XK_l:
 			umbrella.shape ^= 1;
 			break;
-		case XK_l:
+		case XK_p:
 			g.play ^= 1;
-			break
+			break;
 		case XK_r:
 			g.showRain ^= 1;
 			break;
@@ -1097,7 +1097,7 @@ void render()
 		
 	
 	}
-	int *hold;
+	//int *hold;
     	if (g.credits){
         	glBindTexture(GL_TEXTURE_2D, g.credits);
 		glBegin(GL_QUADS);
