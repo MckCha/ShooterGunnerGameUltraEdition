@@ -54,11 +54,17 @@ public:
 	GLuint umbrellaTexture;
 	GLuint startMenu;
 	GLuint settingPage;
+	GLuint resolution1;
+	GLuint resolution2;
+	GLuint resolution3;
 	int credits;
 	int showBigfoot;
 	int forest;
 	int silhouette;
 	int menu;
+	int res1;
+	int res2;
+	int res3;
 	int settings;
 	int trees;
 	int showRain;

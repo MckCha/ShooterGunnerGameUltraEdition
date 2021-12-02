@@ -132,6 +132,10 @@ extern Global g;
 extern Bigfoot bigfoot;
 extern void createMenu();
 extern void createSettings();
+extern void createRes1();
+extern void createRes2();
+extern void createRes3();
+
 // Prototypes
 extern void showCredits(int, int);
 extern void displayHelp(int, int);
@@ -224,6 +228,19 @@ public:
 		XDestroyWindow(dpy, win);
 		XCloseDisplay(dpy);
 	}
+	// Resizes the window
+	//------------------------------------
+	void resize1() {		// 230
+		XResizeWindow(dpy,win,720,480);
+	}
+
+	void resize2() {		// 230
+		XResizeWindow(dpy,win,1280,1080);
+	}
+	void resize3() {		// 230
+		XResizeWindow(dpy,win,1680,1050);
+	}
+	//--------------------------------------
 	void setTitle() {
 		//Set the window title bar.
 		XMapWindow(dpy, win);
@@ -399,6 +416,9 @@ void initOpengl(void)
 	glGenTextures(1, &g.forestTexture); 
 	glGenTextures(1, &g.startMenu);
 	glGenTextures(1, &g.settingPage);
+	glGenTextures(1, &g.resolution1);
+	glGenTextures(1, &g.resolution2);
+	glGenTextures(1, &g.resolution3);
 	glGenTextures(1, &g.umbrellaTexture);
 	//-------------------------------------------------------------------------
 	//bigfoot
@@ -545,14 +565,39 @@ int checkKeys(XEvent *e)
 			initOpengl();
 			break;
 		case XK_q:
-            		g.credits = 0;
-            		initOpengl();
-            		break;
+			g.credits = 0;
+			g.res1 = 0;
+			g.res2 = 0;
+			g.res3 = 0;
+			g.settings = 0;
+			initOpengl();
+			break;
 		case XK_b:
 			g.showBigfoot ^= 1;
 			if (g.showBigfoot) {
 				bigfoot.pos[0] = -250.0;
 			}
+			break;
+		case XK_1:
+			createRes1();
+			x11.setupScreenRes(720, 480);
+			x11.reshapeWindow(720,480);
+			g.res1 = 1;
+			x11.resize1();
+			break;
+		case XK_2:
+			createRes2();
+			x11.setupScreenRes(1280, 1024);
+			x11.reshapeWindow(1280, 1024);
+			g.res2 = 1;
+			x11.resize2();
+			break;
+		case XK_3:
+			createRes3();
+			x11.setupScreenRes(1680, 1050);
+			x11.reshapeWindow(1680, 1050);
+			g.res3 = 1;
+			x11.resize3();
 			break;
 		case XK_e:
             		g.help = 0;
@@ -563,7 +608,7 @@ int checkKeys(XEvent *e)
             		initOpengl();
             		break;
 		case XK_s:
-			g.settings ^= 1;
+			g.settings = 1;
 			break;
 		case XK_d:
 			g.deflection ^= 1;
@@ -951,6 +996,33 @@ void render()
 	}
 	if (g.settings) {
 		glBindTexture(GL_TEXTURE_2D, g.settingPage);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
+		glEnd();
+	}
+	if (g.res1) {
+		glBindTexture(GL_TEXTURE_2D, g.resolution1);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
+		glEnd();
+	}
+	if (g.res2) {
+		glBindTexture(GL_TEXTURE_2D, g.resolution1);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
+		glEnd();
+	}
+	if (g.res3) {
+		glBindTexture(GL_TEXTURE_2D, g.resolution1);
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
 			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
