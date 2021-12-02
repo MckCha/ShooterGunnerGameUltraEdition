@@ -60,6 +60,43 @@ public:
 	int deflection;
 	Global();
 };
+
+class Laser {
+    public:
+        //type 1 is player laser, type 0 is enemy laser
+        int type;
+        int linewidth;
+        Vec pos;
+        Vec lastpos;
+        Vec vel;
+        Vec maxvel;
+        Vec force;
+        float length;
+        float color[4];
+        Laser *prev;
+        Laser *next;
+
+};
+
+class Enemy {
+    public:
+        Vec pos;
+        double direction;
+        double vel;
+        double color[3];
+        double radius;
+        Enemy *prev;
+        Enemy *next;
+};
+
+class Player {
+    public:
+        Vec pos;
+        double color[3];
+        double radius;
+        Player();
+} PShip;
+
 typedef double Vec[3];
 class Bigfoot {
 public:
