@@ -19,6 +19,7 @@ void checkCollisions();
 void spawner();
 
 //class forward declarations
+//moved class definitions to myglobal, left here for documentation
 class Laser;
 class Enemy;
 class Player;
@@ -26,6 +27,7 @@ class Player;
 //functions are grouped with classes by association, most are not
 //part of the actual class that they are grouped with.
 /*---------LASERS---------*/
+/*
 class Laser {
     public:
         //type 1 is player laser, type 0 is enemy laser
@@ -44,7 +46,7 @@ class Laser {
         
 
 };
-
+*/
 //Laser Prototypes
 void cleanupLasers();
 void deleteLaser(Laser*);
@@ -224,7 +226,7 @@ void drawLasers()
 
 /*---------ENEMIES------------*/
 
-
+/*
 class Enemy {
     public:
         Vec pos;
@@ -236,6 +238,7 @@ class Enemy {
         Enemy *next;
         
 };
+*/
 
 Enemy *headenemy;
 
@@ -355,6 +358,8 @@ void checkEnemies()
 
 //Ship has no health pool, one shot and you're done.
 //Toggle the game over variable
+//
+/*
 class Player {
     public:
         Vec pos;
@@ -369,10 +374,18 @@ class Player {
             color[2] = 1.0;
         }
 } PShip;
+*/
 //Dont tie functions to this class, its just for  display and determining
 //collisions and player laser spawn locations. Very simple
 
-
+Player::Player(){
+    pos[0] = (Flt)(g.xres/2);
+    pos[1] = (Flt)(g.yres/8);
+    radius = 10.0;
+    color[0] = 0.1;
+    color[1] = 0.1;
+    color[2] = 1.0;
+}
 /*---------END PLAYER SHIP----*/
 
 /*--BEGIN GENERAL FUNCTIONS---*/
