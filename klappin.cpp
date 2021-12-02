@@ -25,6 +25,9 @@ class Laser;
 class Enemy;
 class Player;
 
+
+//variables
+
 //functions are grouped with classes by association, most are not
 //part of the actual class that they are grouped with.
 /*---------LASERS---------*/
@@ -321,15 +324,19 @@ void checkEnemies()
     //increase speed and reverse.
     while (node) {
         //if at one of the edges, drop down, speed up, reverse direction
-        if (node->pos[0] > (g.xres-20) || node->pos[0] < 20)
+        if (node->pos[0] >= (g.xres-(g.xres/8)) || node->pos[0] <= g.xres/8)
         {
+            if (node->direction > 0)
+                node->direction = -1;
+            else if (node->direction < 0)
+                node->direction = 1;
             node->direction = -node->direction;
-            node->pos[1] -= 20;
-            node->vel = node->vel * 1.20;
+            node->pos[1] -= g.xres/20;
+            node->vel = node->vel * 1.15;
         }
         //Dont think we'll hit any significant floating point precision
         //problems. Keep an eye out for them.
-        node->pos[0] += (20 *(node->direction) * (node->vel));
+        node->pos[0] += ((g.xres/50) *(node->direction) * (node->vel));
 
     }    
     
@@ -337,7 +344,7 @@ void checkEnemies()
     
     //check if enemies reach player ship
     while (node) {
-        if (node->pos[1] <= 50)
+        if (node->pos[1] <= g.yres/8)
         {
             deleteEnemy(node);
             gameover = True;
@@ -393,7 +400,7 @@ class Player {
 Player::Player(){
     pos[0] = (Flt)(g.xres/2);
     pos[1] = (Flt)(g.yres/8);
-    radius = 10.0;
+    radius = g.xres/70;
     color[0] = 0.1;
     color[1] = 0.1;
     color[2] = 1.0;
@@ -478,6 +485,56 @@ void beginEnemies()
             createEnemy();
         }
     }
+}
+
+//Run these controls when playing the game
+int gameControls(XEvent *e)
+{
+	static int shift=0;
+	if (e->type != KeyPress && e->type != KeyRelease)
+		return 0;
+	int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
+	if (e->type == KeyRelease) {
+		if (key == XK_Shift_L || key == XK_Shift_R)
+			shift=0;
+		return 0;
+	}
+	if (key == XK_Shift_L || key == XK_Shift_R) {
+		shift=1;
+		return 0;
+	}
+	switch (key) {
+		//Still Trying to figure out ShowingCredits.
+		case XK_Left:
+                    //margins of 1/8th the screen on both sides
+                    if (PShip.pos[0] >= g.xres /8)
+                        PShip.pos[0] -= g.xres/100;
+                    break;
+        case XK_Right:
+                    if (PShip.pos[0] <= (g.xres - g.xres/8))
+                        PShip.pos[0] += g.xres/100;
+                    break;
+		case XK_space:
+            		if (playerlascount < MAX_PLAYERLAS)
+                        createPlayerLaser(PShip.pos[0], PShip.pos[1]);
+            		break;
+        case XK_Escape:
+                return 1;
+        case XK_q:
+                gameover = 1;
+                break;
+    }
+    (void) shift;
+    return 0;
+}
+
+//Package function for easy calling of all updates
+void update()
+{
+    checkLasers();
+    checkEnemies();
+    spawner(); 
+
 }
 
 
