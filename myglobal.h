@@ -28,12 +28,18 @@ typedef Flt	Matrix[4][4];
 //constants
 const float timeslice = 1.0f;
 const float gravity = -0.4f;
-const int MAX_ENEMIES = 5;
-const int MAX_ENEMYLAS = 10;
+const int MAX_ENEMIES = 10;
+const int MAX_ENEMYLAS = 15;
 const int MAX_PLAYERLAS = 5;
 #define ALPHA 1
 
+//variables
 int SCORE;
+int enemycount;
+int enemylascount;
+int playerlascount;
+bool playerexists;
+bool gameover;
 
 
 class Global {
