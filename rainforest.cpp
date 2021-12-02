@@ -506,8 +506,8 @@ void initSounds()
 }
 
 void init() {
-	umbrella.pos[0] = 220.0;
-	umbrella.pos[1] = (double)(g.yres-200);
+	umbrella.pos[0] = g.xres /2;
+	umbrella.pos[1] = g.yres = 10; //(double)(g.yres-200);
 	VecCopy(umbrella.pos, umbrella.lastpos);
 	umbrella.width = 200.0;
 	umbrella.width2 = umbrella.width * 0.5;
