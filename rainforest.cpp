@@ -571,6 +571,7 @@ int checkKeys(XEvent *e)
 			g.res3 = 0;
 			g.settings = 0;
 			initOpengl();
+			break;
 		case XK_b:
 			g.showBigfoot ^= 1;
 			if (g.showBigfoot) {
