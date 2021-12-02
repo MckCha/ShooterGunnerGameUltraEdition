@@ -34,14 +34,7 @@ void displayHelp(int x,int y)
     ggprint16(&r, 16, 0x0000ff00, "([space] key) - Shoot bullets");
     ggprint16(&r, 16, 0x0000ff00, "-----------------------------------------");
     ggprint16(&r, 16, 0x0000ff00, "    ");
-    ggprint16(&r, 16, 0x0000ff00, "    ");
-    ggprint16(&r, 16, 0x0000ff00, "*OTHER KEYS*");
-    ggprint16(&r, 16, 0x0000ff00, "-----------------------------------------");
-    ggprint16(&r, 16, 0x0000ff00, "    ");
-    ggprint16(&r, 16, 0x0000ff00, "([esc] key - To close the game");
-    ggprint16(&r, 16, 0x0000ff00, "-----------------------------------------");
-    ggprint16(&r, 16, 0x0000ff00, "    ");
-    ggprint16(&r, 16, 0x000000ff, "(E key) - Exit from help menu");
+    ggprint16(&r, 16, 0x0000ff00, "(H key) - Exit from help menu");
 
 }
 
