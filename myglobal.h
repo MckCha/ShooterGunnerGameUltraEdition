@@ -58,6 +58,7 @@ public:
 	GLuint resolution2;
 	GLuint resolution3;
 	int credits;
+	int play;
 	int showBigfoot;
 	int forest;
 	int silhouette;
