@@ -574,6 +574,27 @@ int checkKeys(XEvent *e)
 				bigfoot.pos[0] = -250.0;
 			}
 			break;
+		case XK_1:
+			createRes1();
+			x11.setupScreenRes(720, 480);
+			x11.reshapeWindow(720,480);
+			g.res1 ^= 1;
+			x11.resize1();
+			break;
+		case XK_2:
+			createRes2();
+			x11.setupScreenRes(1280, 1024);
+			x11.reshapeWindow(1280, 1024);
+			g.res2 ^= 1;
+			x11.resize2();
+			break;
+		case XK_3:
+			createRes3();
+			x11.setupScreenRes(1680, 1050);
+			x11.reshapeWindow(1680, 1050);
+			g.res3 ^= 1;
+			x11.resize3();
+			break;
 		case XK_e:
             		g.help = 0;
            	 	initOpengl();
