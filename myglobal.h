@@ -71,7 +71,7 @@ public:
 	int showUmbrella;
 	int deflection;
 	Global();
-};
+} g;
 
 class Laser {
     public:
@@ -105,7 +105,12 @@ class Player {
     public:
         Vec pos;
         double color[3];
-        double radius;
+        //double radius;
+	int shape;
+	Vec lastpos;
+	float width;
+	float width2;
+	float radius;
         Player();
 } PShip;
 
