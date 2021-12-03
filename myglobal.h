@@ -56,6 +56,8 @@ public:
 	GLuint resolution1;
 	GLuint resolution2;
 	GLuint resolution3;
+    GLuint playerTexture;
+    GLuint enemyTexture;
 	int credits;
     int gameover;
     int gamestart;
