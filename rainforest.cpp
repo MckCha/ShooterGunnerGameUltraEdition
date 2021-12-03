@@ -300,39 +300,55 @@ int main()
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	int done = 0;
+    g.gamestart = 1;
 	while (!done) {
+        
 		while (x11.getXPending()) {
 			//XEvent e;
 			//XNextEvent(dpy, &e);
 			XEvent e = x11.getXNextEvent();
 			x11.checkResize(&e);
 			checkMouse(&e);
-			done = checkKeys(&e);
+            if (!g.play)
+			    done = checkKeys(&e);
+            else
+                done = gameControls(&e);
 		}
-		//
-		//Below is a process to apply physics at a consistent rate.
-		//1. Get the current time.
-		clock_gettime(CLOCK_REALTIME, &timeCurrent);
-		//2. How long since we were here last?
-		timeSpan = timeDiff(&timeStart, &timeCurrent);
-		//3. Save the current time as our new starting time.
-		timeCopy(&timeStart, &timeCurrent);
-		//4. Add time-span to our countdown amount.
-		physicsCountdown += timeSpan;
-		//5. Has countdown gone beyond our physics rate? 
-		//       if yes,
-		//           In a loop...
-		//              Apply physics
-		//              Reducing countdown by physics-rate.
-		//              Break when countdown < physics-rate.
-		//       if no,
-		//           Apply no physics this frame.
+        if (g.play == 1)
+        {    
+            if (g.gamestart == 1)
+            {
+                SCORE = 0;
+                PShip.pos[0] = g.xres/2;
+                beginEnemies();
+                g.gamestart = 0;
+            }
+	    	//
+	    	//Below is a process to apply physics at a consistent rate.
+	    	//1. Get the current time.
+	    	clock_gettime(CLOCK_REALTIME, &timeCurrent);
+	    	//2. How long since we were here last?
+	    	timeSpan = timeDiff(&timeStart, &timeCurrent);
+	    	//3. Save the current time as our new starting time.
+	    	timeCopy(&timeStart, &timeCurrent);
+	    	//4. Add time-span to our countdown amount.
+	    	physicsCountdown += timeSpan;
+	    	//5. Has countdown gone beyond our physics rate? 
+	    	//       if yes,
+	    	//           In a loop...
+	    	//              Apply physics
+	    	//              Reducing countdown by physics-rate.
+	    	//              Break when countdown < physics-rate.
+	    	//       if no,
+	    	//           Apply no physics this frame.
+        
 		while (physicsCountdown >= physicsRate) {
 			//6. Apply physics
-			physics();
+			update();
 			//7. Reduce the countdown by our physics-rate
 			physicsCountdown -= physicsRate;
 		}
+        }
 		//Always render every frame.
 		render();
 		x11.swapBuffers();
