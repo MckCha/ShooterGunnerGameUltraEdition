@@ -39,7 +39,6 @@ int enemycount;
 int enemylascount;
 int playerlascount;
 bool playerexists;
-bool gameover;
 
 
 class Global {
@@ -58,6 +57,8 @@ public:
 	GLuint resolution2;
 	GLuint resolution3;
 	int credits;
+    int gameover;
+    int gamestart;
 	int play;
 	int showBigfoot;
 	int forest;
