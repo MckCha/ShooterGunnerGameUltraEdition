@@ -1137,7 +1137,7 @@ void drawRaindrops()
 
 void render()
 {
-	Rect r;
+	//Rect r;
 	//Clear the screen
 	glClearColor(1.0, 1.0, 1.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -1265,7 +1265,7 @@ void render()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	//
 	//
-	unsigned int c = 0x00ffff44;
+	/*unsigned int c = 0x00ffff44;
 	r.bot = g.yres - 20;
 	r.left = 10;
 	r.center = 0;
@@ -1278,7 +1278,7 @@ void render()
 	ggprint8b(&r, 16, c, "H - Help Menu");
 		
 	
-	}
+	}*/
 	//int *hold;
     	if (g.credits){
         	glBindTexture(GL_TEXTURE_2D, g.credits);
