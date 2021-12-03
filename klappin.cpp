@@ -11,7 +11,6 @@
 extern int enemycount;
 extern int enemylascount;
 extern int playerlascount;
-extern bool playerexists;
 
 //General Prototypes
 void checkCollisions();
@@ -26,7 +25,10 @@ class Enemy;
 class Player;
 
 
-//variables
+//constants
+const int RIGHT_BOUNDARY = (g.xres-(g.xres/8));
+const int LEFT_BOUNDARY = g.xres/8;
+
 
 //functions are grouped with classes by association, most are not
 //part of the actual class that they are grouped with.
@@ -145,10 +147,10 @@ void createEnemyLaser(const int xval, const int yval)
     {
         createLaser(xval, yval);
         headlaser->type = 0;
-        headlaser->color[0] = 0.9f;
-        headlaser->color[1] = 0.1f;
-        headlaser->color[2] = 0.1f;
-        headlaser->color[3] = 0.8f;
+        headlaser->color[0] = 1.0f;
+        headlaser->color[1] = 1.0f;
+        headlaser->color[2] = 1.0f;
+        headlaser->color[3] = 1.0f;
         headlaser->pos[1] -= 10.0f;
         enemylascount++;
     }
@@ -163,8 +165,8 @@ void createPlayerLaser(const int xval, const int yval)
         headlaser->type = 1;
         headlaser->color[0] = 0.1f;
         headlaser->color[1] = 0.1f;
-        headlaser->color[2] = 0.9f;
-        headlaser->color[3] = 0.8f;
+        headlaser->color[2] = 1.0f;
+        headlaser->color[3] = 0.1f;
         headlaser->pos[1] += 10.0f;
         playerlascount++;
     }
@@ -249,12 +251,12 @@ class Enemy {
 Enemy *headenemy;
 
 //Enemy declarations
-void createEnemy();
+void createEnemy(const int, const int);
 void deleteEnemy(Enemy*);
 void cleanupEnemies();
 void checkEnemies();
 
-void createEnemy()
+void createEnemy(int xcord, int ycord)
 {
     if (enemycount < MAX_ENEMIES)
     {
@@ -265,9 +267,9 @@ void createEnemy()
             Log("error allocating enemy.\n");
             exit(EXIT_FAILURE);
         }
-        node->pos[0] = (Flt)(g.xres/10);
-        node->pos[1] = (Flt)(g.yres - 50);
-        node->pos[2] = 0;
+        node->pos[0] = (Flt)(xcord);
+        node->pos[1] = (Flt)(ycord);
+        node->pos[2] = (Flt) 0;
         node->vel = 1.0;
         node->direction = 1.0;
         node->color[0] = 1.0;
@@ -287,7 +289,7 @@ void deleteEnemy(Enemy *node)
 {
     if (node->prev == NULL) {
         if (node->next == NULL) {
-            headlaser = NULL;
+            headenemy = NULL;
         } else {
             node->next->prev = NULL;
             headenemy = node->next;
@@ -300,7 +302,7 @@ void deleteEnemy(Enemy *node)
            node->next->prev = node->prev;
        }
    }
-  // free(node);
+   //free(node);
    node = NULL;
 }
 
@@ -309,7 +311,7 @@ void cleanupEnemies()
     Enemy * s;
     while (headenemy) {
         s = headenemy->next;
-   //     free(headenemy);
+        free(headenemy);
         headenemy = s;
     }
     headenemy=NULL;
@@ -328,7 +330,7 @@ void checkEnemies()
     //increase speed and reverse.
     while (node) {
         //if at one of the edges, drop down, speed up, reverse direction
-        if (node->pos[0] >= (g.xres-(g.xres/8)) || node->pos[0] <= g.xres/8)
+        if (node->pos[0] >= RIGHT_BOUNDARY || node->pos[0] <= LEFT_BOUNDARY)
         {
             if (node->direction > 0)
                 node->direction = -1;
@@ -338,8 +340,7 @@ void checkEnemies()
             node->pos[1] -= g.xres/20;
             node->vel = node->vel * 1.15;
         }
-        //Dont think we'll hit any significant floating point precision
-        //problems. Keep an eye out for them.
+
         node->pos[0] += ((g.xres/50) *(node->direction) * (node->vel));
         node = node->next;
 
@@ -452,7 +453,7 @@ void checkCollisions()
         if (lasers->type == 1) 
         {
             while (enemies)
-            {   //using method from Asteroids framework. Its pretty clever
+            {   //From Asteroids, draw a hitbox
                 xd = lasers->pos[0] - enemies->pos[0];
                 yd = lasers->pos[1] - enemies->pos[1];
                 distance = (xd*xd + yd*yd);
@@ -497,22 +498,18 @@ void spawner()
 {
    if (random(100) < 8) 
    {
-       createEnemy();
+       createEnemy(g.xres/5, g.yres - g.yres/8 );
    }
 }
 
 //spawn a few enemies at the beginning
 void beginEnemies()
 {
-    //filler values so enemies don't all spawn at exactly the same time.
-    //More efficient ways to do this but it's the simplest.
-    for (int i = 0; i <= 5; i++)
+    for (int i = 1; i <= 5; i++)
     {
-        //spawn 5 enemies
-        if (i % 2 == 0)
-        {
-            createEnemy();
-        }
+        //spawn 5 enemies from right to left
+        createEnemy((g.xres/i),(g.yres - g.yres/8));
+        
     }
 }
 
