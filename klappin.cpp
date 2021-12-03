@@ -404,10 +404,34 @@ Player::Player(){
     pos[0] = (Flt)(g.xres/2);
     pos[1] = (Flt)(g.yres/8);
     radius = g.xres/70;
-    color[0] = 0.1;
-    color[1] = 0.1;
-    color[2] = 1.0;
+    color[0] = (Flt)0.1;
+    color[1] = (Flt)0.1;
+    color[2] = (Flt)1.0;
 }
+
+
+/*
+//placeholder until images
+void drawPlayer()
+{
+    glColor3fv(PShip.color);
+    glPushMatrix()
+    glTranslatef(PShip.pos[0], PShip.pos[1], PShip.pos[2]);
+    glBegin(GL_TRIANGLES);
+    glVertex2f(-12.0f, -10.0f);
+    glVertex2f(  0.0f,  20.0f);
+    glVertex2f(  0.0f, -6.0f);
+    glVertex2f(  0.0f, 20.0f);
+    glVertex2f( 12.0f, -10.0f);
+
+    glBegin(GL_POINTS);
+    glVertex2f(0.0f, 0.0f);
+    glEnd();
+    glPopMatrix();
+    
+}
+*/
+
 /*---------END PLAYER SHIP----*/
 
 /*--BEGIN GENERAL FUNCTIONS---*/
@@ -539,6 +563,7 @@ void update()
     spawner(); 
 
 }
+
 
 void gameover(){
     cleanupLasers();
