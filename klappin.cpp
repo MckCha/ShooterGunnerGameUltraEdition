@@ -12,12 +12,12 @@ extern int enemycount;
 extern int enemylascount;
 extern int playerlascount;
 extern bool playerexists;
-extern bool gameover;
 
 //General Prototypes
 void checkCollisions();
 void spawner();
 void beginEnemies();
+void gameover();
 
 //class forward declarations
 //moved class definitions to myglobal, left here for documentation
@@ -32,6 +32,8 @@ class Player;
 //part of the actual class that they are grouped with.
 /*---------LASERS---------*/
 /*
+
+
 class Laser {
     public:
         //type 1 is player laser, type 0 is enemy laser
@@ -310,6 +312,7 @@ void cleanupEnemies()
         headenemy = s;
     }
     headenemy=NULL;
+    enemycount = 0;
 }
 
 
@@ -347,7 +350,7 @@ void checkEnemies()
         if (node->pos[1] <= g.yres/8)
         {
             deleteEnemy(node);
-            gameover = True;
+            gameover();
             break;
         }
         //if they haven't, give them a chance of firing a laser
@@ -453,7 +456,7 @@ void checkCollisions()
             if (distance < (PShip.radius*PShip.radius))
             {
                 //player is hit, end game.
-                gameover = True;
+                gameover();
                 break;
             }
             lasers = lasers->next;
@@ -521,7 +524,7 @@ int gameControls(XEvent *e)
         case XK_Escape:
                 return 1;
         case XK_q:
-                gameover = 1;
+                gameover();
                 break;
     }
     (void) shift;
@@ -537,7 +540,14 @@ void update()
 
 }
 
-
+void gameover(){
+    cleanupLasers();
+    cleanupEnemies();
+    g.gameover = 1;
+    g.play = 0;
+    g.gamestart = 1;
+    
+}
 
 
 
