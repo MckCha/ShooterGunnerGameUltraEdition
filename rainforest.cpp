@@ -591,6 +591,7 @@ int checkKeys(XEvent *e)
 			initOpengl();
 			break;
 		case XK_q:
+            g.gameover = 0;
 			g.res1 = 0;
 			g.res2 = 0;
 			g.res3 = 0;
@@ -1004,6 +1005,12 @@ void render()
         ggprint16(&r, 16, 0x00ffff00, "Requirements");
 	}
 	*/
+    if (g.play)
+    {
+        
+        drawLasers();
+    }
+
 	if (g.forest) {
 		glBindTexture(GL_TEXTURE_2D, g.startMenu);
 		glBegin(GL_QUADS);
