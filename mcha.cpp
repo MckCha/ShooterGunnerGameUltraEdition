@@ -11,7 +11,7 @@
 Bigfoot::Bigfoot() {};
 Bigfoot bigfoot;
 
-Image img[9] = {
+Image img[11] = {
 "./images/yep.png",
 "./images/space.png",
 "./images/forestTrans.png",
@@ -20,7 +20,9 @@ Image img[9] = {
 "./images/resolution.png",
 "./images/resolution1.png",
 "./images/resolution2.png",
-"./images/resolution3.png"};
+"./images/resolution3.png",
+"./images/Emissary.png",
+"./images/Beholder.png"};
 
 extern Global g;
 
