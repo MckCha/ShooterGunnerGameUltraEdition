@@ -32,6 +32,9 @@ const int MAX_ENEMIES = 10;
 const int MAX_ENEMYLAS = 15;
 const int MAX_PLAYERLAS = 5;
 #define ALPHA 1
+#define PI 3.141592653589793
+const int MAX_BULLETS = 11;
+
 
 //variables
 int SCORE;
@@ -74,8 +77,60 @@ public:
 	int showRain;
 	int showUmbrella;
 	int deflection;
-	Global();
+    char keys[65536];
+    Global(); 
 } g;
+
+class Ship {
+public:
+    Vec pos;
+    Vec dir;
+    Vec vel;
+    Vec acc;
+    float angle;
+    float color[3];
+public:
+    Ship() {
+        pos[0] = (Flt)(g.xres/2);
+        pos[1] = (Flt)(g.yres/8);
+        pos[2] = 0.0f;
+        VecZero(dir);
+        VecZero(vel);
+        VecZero(acc);
+        angle = 0.0;
+        color[0] = color[1] = color[2] = 1.0;
+    }
+};
+
+class Bullet {
+public:
+    Vec pos;
+    Vec vel;
+    float color[3];
+    struct timespec time;
+public:
+    Bullet() { }
+};
+
+class Game {
+public:
+    Ship ship;
+    Bullet *barr;
+    int nasteroids;
+    int nbullets;
+    struct timespec bulletTimer;
+    struct timespec mouseThrustTimer;
+    bool mouseThrustOn;
+public:
+    Game() {
+        //ahead = NULL;
+        barr = new Bullet[MAX_BULLETS];
+        clock_gettime(CLOCK_REALTIME, &bulletTimer);
+    }
+    ~Game() {
+        delete [] barr;
+    }
+} gl;
 
 class Laser {
     public:

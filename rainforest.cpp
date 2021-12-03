@@ -51,6 +51,7 @@ const float timeslice = 1.0f;
 const float gravity = -0.2f;
 #define ALPHA 1
 */
+#define PI 3.141592653589793
 //-----------------------------------------------------------------------------
 //Setup timers
 //clock_gettime(CLOCK_REALTIME, &timePause);
@@ -69,6 +70,7 @@ void timeCopy(struct timespec *dest, struct timespec *source) {
 	memcpy(dest, source, sizeof(struct timespec));
 }
 //-----------------------------------------------------------------------------
+
 
 
 /*
@@ -596,7 +598,7 @@ int checkKeys(XEvent *e)
 		return 0;
 	int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
 	if (e->type == KeyRelease) {
-		if (key == XK_Shift_L || key == XK_Shift_R)
+	if (key == XK_Shift_L || key == XK_Shift_R)
 			shift=0;
 		return 0;
 	}
@@ -604,6 +606,7 @@ int checkKeys(XEvent *e)
 		shift=1;
 		return 0;
 	}
+
 	switch (key) {
 		//Still Trying to figure out ShowingCredits.
 		case XK_c:
@@ -945,6 +948,137 @@ void checkRaindrops()
 
 void physics()
 {
+    //Update ship position
+    gl.ship.pos[0] += gl.ship.vel[0];
+    gl.ship.pos[1] += gl.ship.vel[1];
+    //Check for collision with window edges
+    if (gl.ship.pos[0] < 0.0) {
+        gl.ship.pos[0] += (float)g.xres;
+    }
+    else if (gl.ship.pos[0] > (float)g.xres) {
+        gl.ship.pos[0] -= (float)g.xres;
+    }
+    else if (gl.ship.pos[1] < 0.0) {
+        gl.ship.pos[1] += (float)g.yres;
+    }
+    else if (gl.ship.pos[1] > (float)g.yres) {
+        gl.ship.pos[1] -= (float)g.yres;
+    }
+    //
+    //------------------------------
+    //Update bullet positions
+    struct timespec bt;
+    clock_gettime(CLOCK_REALTIME, &bt);
+    int i = 0;
+    while (i < gl.nbullets) {
+        Bullet *b = &gl.barr[i];
+        //How long has bullet been alive?
+        double ts = timeDiff(&b->time, &bt);
+        if (ts > 2.5) {
+            //time to delete the bullet.
+            memcpy(&gl.barr[i], &gl.barr[gl.nbullets-1],
+                sizeof(Bullet));
+            gl.nbullets--;
+            //do not increment i.
+            continue;
+        }
+        //move the bullet
+        b->pos[0] += b->vel[0];
+        b->pos[1] += b->vel[1];
+        //Check for collision with window edges
+        if (b->pos[0] < 0.0) {
+            b->pos[0] += (float)g.xres;
+        }
+        else if (b->pos[0] > (float)g.xres) {
+            b->pos[0] -= (float)g.xres;
+        }
+        else if (b->pos[1] < 0.0) {
+            b->pos[1] += (float)g.yres;
+        }
+        else if (b->pos[1] > (float)g.yres) {
+            b->pos[1] -= (float)g.yres;
+        }
+        ++i;
+    }
+    //---------------------------------------------------
+    //check keys pressed now
+    if (g.keys[XK_Left]) {
+        /*g.ship.angle += 4.0;
+        if (g.ship.angle >= 360.0f)
+            g.ship.angle -= 360.0f;
+        }*/
+        //apply thrust
+        //convert ship angle to radians
+        Flt rad = ((gl.ship.angle+90.0) / 180.0f) * PI * 2.0;
+        //convert angle to a vector
+        Flt xdir = cos(rad);
+        Flt ydir = sin(rad);
+        gl.ship.vel[0] += xdir*0.02f;
+        gl.ship.vel[1] += ydir*0.02f;
+        /*Flt speed = sqrt(g.ship.vel[0]*g.ship.vel[0]+
+                g.ship.vel[1]*g.ship.vel[1]);
+        if (speed > 10.0f) {
+            speed = 10.0f;
+            normalize2d(g.ship.vel);
+            g.ship.vel[0] *= speed;
+            g.ship.vel[1] *= speed;
+        }*/
+        }
+     if (g.keys[XK_Right]) {
+        /*g.ship.angle -= 4.0;
+        if (g.ship.angle < 0.0f)
+            g.ship.angle += 360.0f;
+            }*/
+        //apply thrust
+        //convert ship angle to radians
+        Flt rad = ((gl.ship.angle+90.0) / 180.0f) * PI * 2.0;
+        //convert angle to a vector
+        Flt xdir = cos(rad);
+        Flt ydir = sin(rad);
+        gl.ship.vel[0] -= xdir*0.02f;
+        gl.ship.vel[1] -= ydir*0.02f;
+        /*Flt speed = sqrt(g.ship.vel[0]*g.ship.vel[0]+
+                g.ship.vel[1]*g.ship.vel[1]);
+        if (speed > 10.0f) {
+            speed = 10.0f;
+            normalize2d(g.ship.vel);
+            g.ship.vel[0] *= speed;
+            g.ship.vel[1] *= speed;
+        }*/
+    }
+    if (g.keys[XK_space]) {
+        //a little time between each bullet
+        struct timespec bt;
+        clock_gettime(CLOCK_REALTIME, &bt);
+        double ts = timeDiff(&gl.bulletTimer, &bt);
+        if (ts > 0.1) {
+            timeCopy(&gl.bulletTimer, &bt);
+            if (gl.nbullets < MAX_BULLETS) {
+                //shoot a bullet...
+                //Bullet *b = new Bullet;
+                Bullet *b = &gl.barr[gl.nbullets];
+                timeCopy(&b->time, &bt);
+                b->pos[0] = gl.ship.pos[0];
+                b->pos[1] = gl.ship.pos[1];
+                b->vel[0] = gl.ship.vel[0];
+                b->vel[1] = gl.ship.vel[1];
+                //convert ship angle to radians
+                Flt rad = ((gl.ship.angle+90.0) / 360.0f) * PI * 2.0;
+                //convert angle to a vector
+                Flt xdir = cos(rad);
+                Flt ydir = sin(rad);
+                b->pos[0] += xdir*20.0f;
+                b->pos[1] += ydir*20.0f;
+                b->vel[0] += xdir*6.0f + rnd()*0.1;
+                b->vel[1] += ydir*6.0f + rnd()*0.1;
+                b->color[0] = 1.0f;
+                b->color[1] = 1.0f;
+                b->color[2] = 1.0f;
+                gl.nbullets++;
+            }
+        }
+    }
+    
     //replace with all physics checks
 	if (g.showBigfoot)
 		moveBigfoot();
@@ -955,7 +1089,7 @@ void physics()
 void drawUmbrella()
 {
 	//Log("drawUmbrella()...\n");
-	if (umbrella.shape == UMBRELLA_FLAT) {
+	//if (umbrella.shape == UMBRELLA_FLAT) {
 		glColor4f(1.0f, 0.2f, 0.2f, 0.5f);
 		glLineWidth(8);
 		glBegin(GL_LINES);
@@ -963,7 +1097,7 @@ void drawUmbrella()
 			glVertex2f(umbrella.pos[0]+umbrella.width2, umbrella.pos[1]);
 		glEnd();
 		glLineWidth(1);
-	} else {
+	//} else {
 		glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
 		glPushMatrix();
 		glTranslatef(umbrella.pos[0],umbrella.pos[1],umbrella.pos[2]);
@@ -980,7 +1114,7 @@ void drawUmbrella()
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_ALPHA_TEST);
 		glPopMatrix();
-	}
+	//}
 }
 
 void drawRaindrops()
@@ -1168,7 +1302,49 @@ void render()
 		genPlay();
 		drawUmbrella();
         drawLasers();
-    	}
+        glColor3fv(gl.ship.color);
+        //--------------------------------------
+    glPushMatrix();
+    glTranslatef(gl.ship.pos[0], gl.ship.pos[1], gl.ship.pos[2]);
+    //float angle = atan2(ship.dir[1], ship.dir[0]);
+    glRotatef(gl.ship.angle, 0.0f, 0.0f, 1.0f);
+    glBegin(GL_TRIANGLES);
+    //glVertex2f(-10.0f, -10.0f);
+    //glVertex2f(  0.0f, 20.0f);
+    //glVertex2f( 10.0f, -10.0f);
+    glVertex2f(-12.0f, -10.0f);
+    glVertex2f(  0.0f,  20.0f);
+    glVertex2f(  0.0f,  -6.0f);
+    glVertex2f(  0.0f,  -6.0f);
+    glVertex2f(  0.0f,  20.0f);
+    glVertex2f( 12.0f, -10.0f);
+    glEnd();
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glBegin(GL_POINTS);
+    glVertex2f(0.0f, 0.0f);
+    glEnd();
+    glPopMatrix();
+    //---------------------------------------------
+    //-------------------------------------------------------------------------
+    //Draw the bullets
+    for (int i=0; i<gl.nbullets; i++) {
+        Bullet *b = &gl.barr[i];
+        //Log("draw bullet...\n");
+        glColor3f(1.0, 1.0, 1.0);
+        glBegin(GL_POINTS);
+        glVertex2f(b->pos[0],      b->pos[1]);
+        glVertex2f(b->pos[0]-1.0f, b->pos[1]);
+        glVertex2f(b->pos[0]+1.0f, b->pos[1]);
+        glVertex2f(b->pos[0],      b->pos[1]-1.0f);
+        glVertex2f(b->pos[0],      b->pos[1]+1.0f);
+        glColor3f(0.8, 0.8, 0.8);
+        glVertex2f(b->pos[0]-1.0f, b->pos[1]-1.0f);
+        glVertex2f(b->pos[0]-1.0f, b->pos[1]+1.0f);
+        glVertex2f(b->pos[0]+1.0f, b->pos[1]-1.0f);
+        glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
+        glEnd();
+    }
+   }
 		
 	if (g.help){
         	glBindTexture(GL_TEXTURE_2D, g.help);
