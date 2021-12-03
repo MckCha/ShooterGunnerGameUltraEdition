@@ -309,21 +309,23 @@ int main()
 			XEvent e = x11.getXNextEvent();
 			x11.checkResize(&e);
 			checkMouse(&e);
-           if (!g.play)
+            if (!g.play)
 			    done = checkKeys(&e);
-           else
+            else
                 done = gameControls(&e);
 		}
+
+
         if (g.play == 1)
         {    
             if (g.gamestart == 1)
             {
                 SCORE = 0;
                 PShip.pos[0] = g.xres/2;
-     //           createEnemy();
+                beginEnemies();
                 g.gamestart = 0;
             }
-	 /*   	//
+	    	//
 	    	//Below is a process to apply physics at a consistent rate.
 	    	//1. Get the current time.
 	    	clock_gettime(CLOCK_REALTIME, &timeCurrent);
@@ -340,14 +342,17 @@ int main()
 	    	//              Reducing countdown by physics-rate.
 	    	//              Break when countdown < physics-rate.
 	    	//       if no,
-	 */   	//           Apply no physics this frame.
+	    	//           Apply no physics this frame.
         
-	//	while (physicsCountdown >= physicsRate) {
-	//		//6. Apply physics
+		
+		while (physicsCountdown >= physicsRate) {
+			//6. Apply physics
 			update();
 			//7. Reduce the countdown by our physics-rate
-	//		physicsCountdown -= physicsRate;
-   //		}
+			physicsCountdown -= physicsRate;
+		}
+		
+
         }
 		//Always render every frame.
 		render();
@@ -938,10 +943,6 @@ void checkRaindrops()
 		maxrain = n;
 }
 
-
-//allocate textures
-
-
 void physics()
 {
     //replace with all physics checks
@@ -1024,6 +1025,18 @@ void render()
         ggprint16(&r, 16, 0x00ffff00, "Requirements");
 	}
 	*/
+    if (g.play)
+    {
+        //draw enemies
+        
+
+
+
+        //draw player    
+        
+
+        drawLasers();
+    }
 
 	if (g.forest) {
 		glBindTexture(GL_TEXTURE_2D, g.startMenu);
@@ -1095,7 +1108,7 @@ void render()
 				glTexCoord2f(0.0f, 1.0f); glVertex2i( wid,-wid);
 			}
 		glEnd();
-    	glPopMatrix();
+		glPopMatrix();
 		//
 		if (g.trees && g.silhouette) {
 			glBindTexture(GL_TEXTURE_2D, g.forestTransTexture);
@@ -1155,35 +1168,19 @@ void render()
 		glEnd();
         	showCredits(g.xres / 2, g.yres / 1.1);
     	}
+		
 	if (g.play){
 		glBindTexture(GL_TEXTURE_2D, g.play);
 		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
-		glEnd();/*
-        	genPlay();
-        drawUmbrella();
-        */
-        //Draw the player
-        glPushMatrix();
-        glTranslatef(PShip.pos[0], PShip.pos[1], PShip.pos[2]);
-        glBindTexture(GL_TEXTURE_2D, g.playerTexture);
-        
-        //draw the enemies
-        Enemy *enemy = headenemy;
-
-        while (enemy) {
-            glPushMatrix();
-            glTranslatef(enemy->pos[0], enemy->pos[1], enemy->pos[2]);
-            glBindTexture(GL_TEXTURE_2D, g.enemyTexture);
-        }
-
-        
-        //draw Lasers
-        drawLasers();
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
+		glEnd();
+		genPlay();
+		drawUmbrella();
     	}
+		
 	if (g.help){
         	glBindTexture(GL_TEXTURE_2D, g.help);
 		glBegin(GL_QUADS);
