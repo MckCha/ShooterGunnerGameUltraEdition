@@ -1172,6 +1172,7 @@ void render()
 		glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
 		glEnd();
         	genPlay();
+		drawUmbrella();
     	}
 	if (g.help){
         	glBindTexture(GL_TEXTURE_2D, g.help);
