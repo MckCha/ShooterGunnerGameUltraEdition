@@ -24,6 +24,7 @@ Global::Global() {
 //	}
 //Global g;
 
+
 void showCredits(int x,int y)
 {
     Rect r;
