@@ -309,9 +309,9 @@ int main()
 			XEvent e = x11.getXNextEvent();
 			x11.checkResize(&e);
 			checkMouse(&e);
-            if (!g.play)
+           if (!g.play)
 			    done = checkKeys(&e);
-            else
+           else
                 done = gameControls(&e);
 		}
         if (g.play == 1)
@@ -320,10 +320,10 @@ int main()
             {
                 SCORE = 0;
                 PShip.pos[0] = g.xres/2;
-                beginEnemies();
+     //           createEnemy();
                 g.gamestart = 0;
             }
-	    	//
+	 /*   	//
 	    	//Below is a process to apply physics at a consistent rate.
 	    	//1. Get the current time.
 	    	clock_gettime(CLOCK_REALTIME, &timeCurrent);
@@ -340,14 +340,14 @@ int main()
 	    	//              Reducing countdown by physics-rate.
 	    	//              Break when countdown < physics-rate.
 	    	//       if no,
-	    	//           Apply no physics this frame.
+	 */   	//           Apply no physics this frame.
         
-		while (physicsCountdown >= physicsRate) {
-			//6. Apply physics
+	//	while (physicsCountdown >= physicsRate) {
+	//		//6. Apply physics
 			update();
 			//7. Reduce the countdown by our physics-rate
-			physicsCountdown -= physicsRate;
-		}
+	//		physicsCountdown -= physicsRate;
+   //		}
         }
 		//Always render every frame.
 		render();
@@ -1162,9 +1162,10 @@ void render()
 		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
 		glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
 		glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
-		glEnd();
+		glEnd();/*
         	genPlay();
         drawUmbrella();
+        */
         //Draw the player
         glPushMatrix();
         glTranslatef(PShip.pos[0], PShip.pos[1], PShip.pos[2]);
