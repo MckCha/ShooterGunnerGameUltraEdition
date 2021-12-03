@@ -258,14 +258,15 @@ void createEnemy()
 {
     if (enemycount < MAX_ENEMIES)
     {
+
         Enemy *node = (Enemy *)(malloc(sizeof(Enemy)));
         if (node == NULL)
         {
             Log("error allocating enemy.\n");
             exit(EXIT_FAILURE);
         }
-        node->pos[0] = (Flt)(g.xres/random(10));
-        node->pos[1] = (Flt)(g.yres-(random(50)));
+        node->pos[0] = (Flt)(g.xres/10);
+        node->pos[1] = (Flt)(g.yres - 50);
         node->pos[2] = 0;
         node->vel = 1.0;
         node->direction = 1.0;
@@ -278,8 +279,8 @@ void createEnemy()
             headenemy->prev = node;
         headenemy = node;
         ++enemycount;        
-    }
-
+}
+ 
 }
 
 void deleteEnemy(Enemy *node)
@@ -299,7 +300,7 @@ void deleteEnemy(Enemy *node)
            node->next->prev = node->prev;
        }
    }
-   free(node);
+  // free(node);
    node = NULL;
 }
 
@@ -308,7 +309,7 @@ void cleanupEnemies()
     Enemy * s;
     while (headenemy) {
         s = headenemy->next;
-        free(headenemy);
+   //     free(headenemy);
         headenemy = s;
     }
     headenemy=NULL;
@@ -340,6 +341,7 @@ void checkEnemies()
         //Dont think we'll hit any significant floating point precision
         //problems. Keep an eye out for them.
         node->pos[0] += ((g.xres/50) *(node->direction) * (node->vel));
+        node = node->next;
 
     }    
     
@@ -350,7 +352,7 @@ void checkEnemies()
         if (node->pos[1] <= g.yres/8)
         {
             deleteEnemy(node);
-            gameover();
+           // gameover();
             break;
         }
         //if they haven't, give them a chance of firing a laser
@@ -480,7 +482,7 @@ void checkCollisions()
             if (distance < (PShip.radius*PShip.radius))
             {
                 //player is hit, end game.
-                gameover();
+                //gameover();
                 break;
             }
             lasers = lasers->next;
@@ -565,7 +567,8 @@ void update()
 }
 
 
-void gameover(){
+void gameover()
+{
     cleanupLasers();
     cleanupEnemies();
     g.gameover = 1;
