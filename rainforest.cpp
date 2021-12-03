@@ -443,9 +443,24 @@ void initOpengl(void)
     //------------------------------------------------------------------------
     //player
     //
-    glBindTexture(GL_TEXTURE_2d, g.playerTexture);
+    glBindTexture(GL_TEXTURE_2D, g.playerTexture);
 
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, PShip.radius*2, PShip.radius*2, 0,
+	GL_RGB, GL_UNSIGNED_BYTE, img[9].data);
     
+    //------------------------------------------------------------------------
+    //enemy
+    //
+    glBindTexture(GL_TEXTURE_2D, g.enemyTexture);
+
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, PShip.radius*2, PShip.radius*2, 0,
+	GL_RGB, GL_UNSIGNED_BYTE, img[10].data);
 	//-------------------------------------------------------------------------
 	//bigfoot
 	//
@@ -1007,7 +1022,14 @@ void render()
 	*/
     if (g.play)
     {
+        //draw enemies
         
+
+
+
+        //draw player    
+        
+
         drawLasers();
     }
 
