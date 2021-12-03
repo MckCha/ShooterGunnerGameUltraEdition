@@ -504,10 +504,10 @@ void beginEnemies()
 {
     //filler values so enemies don't all spawn at exactly the same time.
     //More efficient ways to do this but it's the simplest.
-    for (int i = 0; i <= 1000; i++)
+    for (int i = 0; i <= 5; i++)
     {
         //spawn 5 enemies
-        if (i % 200 == 0)
+        if (i % 2 == 0)
         {
             createEnemy();
         }
