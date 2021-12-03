@@ -1025,18 +1025,6 @@ void render()
         ggprint16(&r, 16, 0x00ffff00, "Requirements");
 	}
 	*/
-    if (g.play)
-    {
-        //draw enemies
-        
-
-
-
-        //draw player    
-        
-
-        drawLasers();
-    }
 
 	if (g.forest) {
 		glBindTexture(GL_TEXTURE_2D, g.startMenu);
@@ -1179,6 +1167,7 @@ void render()
 		glEnd();
 		genPlay();
 		drawUmbrella();
+        drawLasers();
     	}
 		
 	if (g.help){
