@@ -436,6 +436,16 @@ void initOpengl(void)
 	glGenTextures(1, &g.resolution2);
 	glGenTextures(1, &g.resolution3);
 	glGenTextures(1, &g.umbrellaTexture);
+    glGenTextures(1, &g.playerTexture);
+    glGenTextures(1, &g.enemyTexture);
+
+
+    //------------------------------------------------------------------------
+    //player
+    //
+    glBindTexture(GL_TEXTURE_2d, g.playerTexture);
+
+    
 	//-------------------------------------------------------------------------
 	//bigfoot
 	//
@@ -447,7 +457,7 @@ void initOpengl(void)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
+	GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
 	//-------------------------------------------------------------------------
 	//
 	//silhouette
