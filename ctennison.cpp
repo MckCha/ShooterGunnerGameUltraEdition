@@ -24,6 +24,8 @@ Global::Global() {
 //	}
 //Global g;
 
+
+
 void showCredits(int x,int y)
 {
     Rect r;
@@ -49,6 +51,8 @@ void showCredits(int x,int y)
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, img[1].width, img[1].height,
 									0, GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
 }
+
+
 void genPlay() {
 		glBindTexture(GL_TEXTURE_2D, g.play);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);

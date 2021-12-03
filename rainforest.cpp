@@ -314,6 +314,8 @@ int main()
             else
                 done = gameControls(&e);
 		}
+
+
         if (g.play == 1)
         {    
             if (g.gamestart == 1)
@@ -342,12 +344,14 @@ int main()
 	    	//       if no,
 	    	//           Apply no physics this frame.
         
+		/*
 		while (physicsCountdown >= physicsRate) {
 			//6. Apply physics
 			update();
 			//7. Reduce the countdown by our physics-rate
 			physicsCountdown -= physicsRate;
 		}
+		*/
         }
 		//Always render every frame.
 		render();
@@ -1163,18 +1167,19 @@ void render()
 		glEnd();
         	showCredits(g.xres / 2, g.yres / 1.1);
     	}
+		
 	if (g.play){
 		glBindTexture(GL_TEXTURE_2D, g.play);
 		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
-		glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
-		glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
-		glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
+			glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+			glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
+			glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
+			glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
 		glEnd();
-        	genPlay();
-        drawUmbrella();
-        drawLasers();
+		genPlay();
+		//drawUmbrella();
     	}
+		
 	if (g.help){
         	glBindTexture(GL_TEXTURE_2D, g.help);
 		glBegin(GL_QUADS);
